@@ -19,26 +19,26 @@ public class LearnerTableModel extends AbstractTableModel {
 	public Object getValueAt(int row, int col) {
 		Learner learner = learners.get(row);
 		switch (col) {
-		case 0:
-			return learner.getWorkshop();
-		case 1:
-			return learner.getBadge();
-		case 2:
-			return learner.getInstructor();
-		case 3:
-			return learner.getUser_id();
-		case 4:
-			return learner.getFirstname();
-		case 5:
-			return learner.getInitials();
-		case 6:
-			return learner.getLastname();
-		case 7:
-			return learner.getEmail();
-		case 8:
-			return learner.getDate();
-		case 9:
-			return learner.isPrint();
+			case 0:
+				return learner.getWorkshop();
+			case 1:
+				return learner.getBadge();
+			case 2:
+				return learner.getInstructor();
+			case 3:
+				return learner.getUser_id();
+			case 4:
+				return learner.getFirstname();
+			case 5:
+				return learner.getInitials();
+			case 6:
+				return learner.getLastname();
+			case 7:
+				return learner.getEmail();
+			case 8:
+				return learner.getDate();
+			case 9:
+				return learner.isPrint();
 		}
 
 		return null;
@@ -46,22 +46,19 @@ public class LearnerTableModel extends AbstractTableModel {
 
 	@Override
 	public boolean isCellEditable(int row, int col) {
-		if (col == (learners.getColumnCount() - 1)) {
+		if (col == (Learners.getColumnCount() - 1)) {
 			return true;
 		} else
 			return false;
 	}
-	
+
 	@Override
 	public String getColumnName(int col) {
-			return learners.getColumnNames()[col];
+		return Learners.getColumnNames()[col];
 	}
 
 	public int getColumnCount() {
-		if (learners == null)
-			return 0;
-		else
-			return learners.getColumnCount();
+		return Learners.getColumnCount();
 	}
 
 	public int getRowCount() {
@@ -81,7 +78,7 @@ public class LearnerTableModel extends AbstractTableModel {
 	}
 
 	@Override
-	public Class getColumnClass(int columnIndex) {
+	public Class<?> getColumnClass(int columnIndex) {
 		if (columnIndex == learners.getColumnCount() - 1) {
 			return Boolean.class;
 		} else {

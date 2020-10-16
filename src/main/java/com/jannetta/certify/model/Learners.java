@@ -21,11 +21,11 @@ public class Learners extends ArrayList<Learner> {
 	 * The number of attributes (columns) in the Workshop class.
 	 * @return
 	 */
-	public int getColumnCount() {
+	public static int getColumnCount() {
 		return Learner.getColumnNumber();
 	}
 	
-	public String[] getColumnNames() {
+	public static String[] getColumnNames() {
 		return Learner.getColumnNames();
 	}
 

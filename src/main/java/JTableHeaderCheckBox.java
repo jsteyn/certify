@@ -15,7 +15,7 @@ public class JTableHeaderCheckBox {
 		dtm = new DefaultTableModel(data, colNames);
 		table = new JTable(dtm);
 		for (int x = 0; x < 5; x++) {
-			dtm.addRow(new Object[] { new Boolean(false), "Row " + (x + 1) + " Col 2", "Row " + (x + 1) + " Col 3" });
+			dtm.addRow(new Object[] { false, "Row " + (x + 1) + " Col 2", "Row " + (x + 1) + " Col 3" });
 		}
 		JScrollPane sp = new JScrollPane(table);
 		TableColumn tc = table.getColumnModel().getColumn(0);
@@ -37,7 +37,7 @@ public class JTableHeaderCheckBox {
 				return;
 			boolean checked = e.getStateChange() == ItemEvent.SELECTED;
 			for (int x = 0, y = table.getRowCount(); x < y; x++) {
-				table.setValueAt(new Boolean(checked), x, 0);
+				table.setValueAt(checked, x, 0);
 			}
 		}
 	}

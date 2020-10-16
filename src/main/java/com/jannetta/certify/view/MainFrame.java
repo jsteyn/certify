@@ -57,7 +57,7 @@ public class MainFrame extends JFrame {
 		} catch (NullPointerException e) {
 			logger.error("Certify.png not found.");
 		}
-//        setJMenuBar(menuBar);
+       setJMenuBar(menuBar);
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				closer();

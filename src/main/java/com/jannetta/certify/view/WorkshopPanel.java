@@ -7,7 +7,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
@@ -20,16 +19,12 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.TableColumn;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.jannetta.certify.controller.Globals;
-import com.jannetta.certify.model.Learner;
-import com.jannetta.certify.model.LearnerTableModel;
-import com.jannetta.certify.model.Learners;
 import com.jannetta.certify.model.Workshop;
 import com.jannetta.certify.model.WorkshopTableModel;
-import com.jannetta.certify.model.Workshops;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.miginfocom.swing.MigLayout;
 

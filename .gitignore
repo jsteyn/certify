@@ -1,9 +1,10 @@
 .classpath
 .project
 .settings
+.factorypath
 target/
 *.json
 *.pdf
 *.csv
 *.txt
-
+system.properties

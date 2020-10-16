@@ -7,11 +7,9 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 import javax.swing.AbstractButton;
@@ -27,14 +25,14 @@ import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.TableColumn;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.jannetta.certify.controller.Globals;
 import com.jannetta.certify.model.Learner;
 import com.jannetta.certify.model.LearnerTableModel;
 import com.jannetta.certify.model.Learners;
 import com.jannetta.certify.model.WorkshopComboBoxModel;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -196,6 +194,7 @@ public class LearnerPanel extends JPanel implements ActionListener {
 		logger.debug(e.getActionCommand());
 		if (e.getActionCommand().equals("comboBoxChanged")) {
 			String view = (String) cb_workshopnames.getSelectedItem();
+			if (!(globals.getAllLearners() == null))
 			globals.getAllLearners().forEach((learner) -> {
 				learner.setPrint(false);
 			});

@@ -22,7 +22,7 @@ public class WorkshopComboBoxModel extends DefaultComboBoxModel {
 	private List<String> workshops;
 	private String selection = null;
 
-	private WorkshopComboBoxModel() {
+	WorkshopComboBoxModel() {
 		super();
 	}
 
@@ -36,7 +36,7 @@ public class WorkshopComboBoxModel extends DefaultComboBoxModel {
 		Collections.sort(items);
 		int size = items.size();
 		for (int i = 0; i < size; i++) {
-			super.addElement(items.elementAt(i));
+			super.addElement((Object)items.elementAt(i));
 		}
 		setSelectedItem(items.elementAt(0));
 	}

@@ -29,6 +29,10 @@ public class Workshop {
 	@SerializedName("URL")
 	@Expose
 	private String url;
+
+	@SerializedName("lessons")
+	@Expose 
+	private Lessons lessons;
 	
 	private boolean print = false;
 
@@ -98,5 +102,15 @@ public class Workshop {
 	public void setPrint(boolean print) {
 		this.print = print;
 	}
+
+	public Lessons getLessons() {
+		return lessons;
+	}
+
+	public void setLessons(Lessons lessons) {
+		this.lessons = lessons;
+	}
+
+	
 
 }

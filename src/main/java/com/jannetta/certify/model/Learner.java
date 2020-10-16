@@ -7,14 +7,14 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Learner {
-	private Logger logger = LoggerFactory.getLogger(getClass());
-	private static final String[] columnNames = { "Workshop Name", "Badge", "Instructor", "User ID", "Firstname", "Initials", "Lastname",
-			"Email", "Date", "Print" };
-	
+	private static Logger logger = LoggerFactory.getLogger(Learner.class);
+	private static final String[] columnNames = { "Workshop Name", "Badge", "Instructor", "User ID", "Firstname",
+			"Initials", "Lastname", "Email", "Date", "Print" };
+
 	@SerializedName("workshop")
 	@Expose
 	private String workshop;
-	
+
 	@SerializedName("badge")
 	@Expose
 	private String badge;
@@ -46,11 +46,11 @@ public class Learner {
 	@SerializedName("date")
 	@Expose
 	private String date;
-	
+
 	private boolean print = false;
-	
-	public Learner(String workshop, String badge, String instructor, String user_id, String firstname, String initials, String lastname,
-			String email, String date) {
+
+	public Learner(String workshop, String badge, String instructor, String user_id, String firstname, String initials,
+			String lastname, String email, String date) {
 		super();
 		this.workshop = workshop;
 		this.badge = badge;
@@ -136,8 +136,9 @@ public class Learner {
 	public void setDate(String date) {
 		this.date = date;
 	}
-	
+
 	public static int getColumnNumber() {
+		logger.debug("Number of columns in learner: " + columnNames.length);
 		return columnNames.length;
 	}
 	
