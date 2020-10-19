@@ -3,6 +3,8 @@ package com.jannetta.certify.view;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
@@ -10,10 +12,12 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -29,6 +33,7 @@ import com.jannetta.certify.controller.Globals;
 import com.jannetta.certify.model.Learner;
 import com.jannetta.certify.model.LearnerTableModel;
 import com.jannetta.certify.model.Learners;
+import com.jannetta.certify.model.Lessons;
 import com.jannetta.certify.model.WorkshopComboBoxModel;
 
 import org.slf4j.Logger;
@@ -63,6 +68,7 @@ public class LearnerPanel extends JPanel implements ActionListener {
 	private JTextField tf_lastname = new JTextField(50);
 	private JTextField tf_email = new JTextField(50);
 	private JTextField tf_date = new JTextField(15);
+	private LessonSelectionPanel pnl_lessonselection;
 	private JTable tbl_learners;
 	private JPanel buttonPanel1 = new JPanel();
 	private JPanel buttonPanel2 = new JPanel();
@@ -80,6 +86,8 @@ public class LearnerPanel extends JPanel implements ActionListener {
 	public LearnerPanel() {
 		super();
 		logger.trace("Create learner panel");
+
+		// Add action listeners to all buttons
 		btn_submit.addActionListener(this);
 		btn_update.addActionListener(this);
 		btn_cancel.addActionListener(this);
@@ -90,9 +98,15 @@ public class LearnerPanel extends JPanel implements ActionListener {
 		btn_save.addActionListener(this);
 		btn_print.addActionListener(this);
 		btn_delete.addActionListener(this);
+
+		// Dropdown box with all workshops to select from
 		WorkshopComboBoxModel workshopComboBoxModel = (WorkshopComboBoxModel) globals.getWorkshopComboBoxModel();
 		cb_workshopnames = new JComboBox<String>(workshopComboBoxModel);
 		cb_workshopnames.addActionListener(this);
+
+		pnl_lessonselection = new LessonSelectionPanel();
+
+		// Table with all learners on file
 		tbl_learners = new JTable(globals.getLearnerTableModel());
 		tbl_learners.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent mouseEvent) {
@@ -112,6 +126,9 @@ public class LearnerPanel extends JPanel implements ActionListener {
 
 						// Transfer record to form
 						cb_workshopnames.setSelectedItem(table.getValueAt(selected_row, 0));
+						logger.debug("Selected item index: " + cb_workshopnames.getSelectedIndex());
+						logger.debug("Set workshop combobox to: " + table.getValueAt(selected_row, 0));
+						cb_workshopnames.setSelectedIndex(cb_workshopnames.getSelectedIndex());
 						cb_badge.setSelectedItem((String) table.getValueAt(selected_row, 1));
 						tf_instructor.setText((String) table.getValueAt(selected_row, 2));
 						tf_user_id.setText((String) table.getValueAt(selected_row, 3));
@@ -120,6 +137,7 @@ public class LearnerPanel extends JPanel implements ActionListener {
 						tf_lastname.setText((String) table.getValueAt(selected_row, 6));
 						tf_email.setText((String) table.getValueAt(selected_row, 7));
 						tf_date.setText((String) table.getValueAt(selected_row, 8));
+						pnl_lessonselection.checkBoxes((String)table.getValueAt(selected_row, 9));
 
 					} else if (selected_row != -1 && column == globals.getLearnerTableModel().getColumnCount() - 1) {
 						learner.setPrint(!learner.isPrint());
@@ -130,13 +148,12 @@ public class LearnerPanel extends JPanel implements ActionListener {
 			}
 		});
 
-		MigLayout migLayout = new MigLayout("fillx", "[]rel[]", "[]10[]");
-		setLayout(migLayout);
-
+		// Put the table in a scroll pane
 		JScrollPane scrollPane = new JScrollPane(tbl_learners);
 		tbl_learners.setFillsViewportHeight(true);
-//		TableColumn col = tbl_learners.getColumnModel().getColumn(tbl_learners.getColumnCount() - 1);
-//		col.setHeaderRenderer(new EditableHeaderRenderer(new JCheckBox("Select All")));
+
+		// Set up the last column with checkbox in the header to select or de-select all
+		// records
 		TableColumn tc = tbl_learners.getColumnModel().getColumn(globals.getLearnerTableModel().getColumnCount() - 1);
 		tc.setCellEditor(tbl_learners.getDefaultEditor(Boolean.class));
 		tc.setCellRenderer(tbl_learners.getDefaultRenderer(Boolean.class));
@@ -153,8 +170,26 @@ public class LearnerPanel extends JPanel implements ActionListener {
 		});
 		tc.setHeaderRenderer(checkboxHeader);
 
+		// Set panel layout
+		MigLayout migLayout = new MigLayout("fillx", "[]rel[]rel[]", "[]10[]10[]");
+		setLayout(migLayout);
+
+		// Add buttons to panels
+		buttonPanel1.add(btn_submit);
+		buttonPanel1.add(btn_update);
+		buttonPanel1.add(btn_cancel);
+		buttonPanel1.add(btn_importA);
+		buttonPanel1.add(btn_importCSV);
+		buttonPanel1.add(btn_delete);
+
+		buttonPanel2.add(btn_save);
+		buttonPanel2.add(btn_print);
+
+		// Add components to main panel
+		// Form components
 		add(lbl_workshop);
-		add(cb_workshopnames, "wrap");
+		add(cb_workshopnames);
+		add(pnl_lessonselection, "span 1 3, wrap");
 		add(lbl_badge);
 		add(cb_badge, "wrap");
 		add(lbl_instructor);
@@ -171,18 +206,14 @@ public class LearnerPanel extends JPanel implements ActionListener {
 		add(tf_email, "wrap");
 		add(lbl_date);
 		add(tf_date, "wrap");
-		buttonPanel1.add(btn_submit);
-		buttonPanel1.add(btn_update);
-		buttonPanel1.add(btn_cancel);
-		buttonPanel1.add(btn_importA);
-		buttonPanel1.add(btn_importCSV);
-		buttonPanel1.add(btn_delete);
 
+		// Panel 1 with buttons
 		add(buttonPanel1, "span, wrap");
+
+		// Scrollpane with table of learners
 		add(scrollPane, "span, grow");
 
-		buttonPanel2.add(btn_save);
-		buttonPanel2.add(btn_print);
+		// Panel 2 with buttons
 		add(buttonPanel2);
 	}
 
@@ -191,27 +222,48 @@ public class LearnerPanel extends JPanel implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		logger.debug(e.getActionCommand());
 		if (e.getActionCommand().equals("comboBoxChanged")) {
 			String view = (String) cb_workshopnames.getSelectedItem();
 			if (!(globals.getAllLearners() == null))
-			globals.getAllLearners().forEach((learner) -> {
-				learner.setPrint(false);
-			});
+				globals.getAllLearners().forEach((learner) -> {
+					learner.setPrint(false);
+				});
 			resetTableHeader();
 			globals.learnersSetView(view);
 		}
 		if (e.getActionCommand().equals("Submit")) {
-			Learner learner = new Learner((String) cb_workshopnames.getSelectedItem(),
-					(String) cb_badge.getSelectedItem(), tf_instructor.getText().strip(), tf_user_id.getText().strip(),
-					tf_firstname.getText().strip(), tf_initials.getText().strip(), tf_lastname.getText().strip(),
-					tf_email.getText().strip(), tf_date.getText().strip());
-			globals.getAllLearners().add(learner);
-			globals.learnersSetView((String) cb_workshopnames.getSelectedItem());
-			// ((LearnerTableModel) tbl_learners.getModel()).getLearners().add(learner);
-			((LearnerTableModel) tbl_learners.getModel()).fireTableDataChanged();
-			globals.setLearnerssaved(false);
-			logger.trace("Submit learner entry to table");
+
+			if (tf_user_id.getText().equals("")) {
+				JOptionPane.showMessageDialog(this, "The learner id field cannot be empty.", "Error",
+						JOptionPane.ERROR_MESSAGE);
+			} else if (globals.getAllLearners().exists(tf_user_id.getText().strip())) {
+				JOptionPane.showMessageDialog(this, "A learner with this ID already exists.", "Error",
+						JOptionPane.ERROR_MESSAGE);
+			} else {
+				Lessons lessons = pnl_lessonselection.getSelectedLessons();
+				Learner learner = new Learner((String) cb_workshopnames.getSelectedItem(),
+						(String) cb_badge.getSelectedItem(), tf_instructor.getText().strip(),
+						tf_user_id.getText().strip(), tf_firstname.getText().strip(), tf_initials.getText().strip(),
+						tf_lastname.getText().strip(), tf_email.getText().strip(), tf_date.getText().strip(), lessons);				
+
+				globals.getAllLearners().add(learner);
+				globals.learnersSetView((String) cb_workshopnames.getSelectedItem());
+				globals.fireTableDataChanged();
+				globals.setLearnerssaved(false);
+
+				logger.trace("Submit learner entry to table");
+				// Clear form
+				cb_workshopnames.setSelectedIndex(-1);
+				cb_badge.setSelectedItem(-1);
+				tf_instructor.setText("");
+				tf_user_id.setText("");
+				tf_firstname.setText("");
+				tf_initials.setText("");
+				tf_lastname.setText("");
+				tf_email.setText("");
+				tf_date.setText("");
+
+			}
 		}
 		if (e.getActionCommand().equals("Update")) {
 			table2Learners(selected_row, tbl_learners);
@@ -331,8 +383,10 @@ public class LearnerPanel extends JPanel implements ActionListener {
 		learner.setInitials(tf_initials.getText().strip());
 		learner.setEmail(tf_email.getText().strip());
 		learner.setDate(tf_date.getText().strip());
+
 		globals.getWorkshopComboBoxModel().setWorkshops((globals.getWorkshops().getWorkshopNames()));
 
 	}
+
 
 }

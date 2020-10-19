@@ -161,13 +161,19 @@ public class WorkshopPanel extends JPanel implements ActionListener {
 			btn_submit.setEnabled(true);
 		}
 		if (e.getActionCommand().equals("Submit")) {
-			Workshop workshop = new Workshop(tf_workshopname.getText().strip(), (String) cb_badge.getSelectedItem(),
-					tf_fromDate.getText().strip(), tf_toDate.getText().strip(), tf_URL.getText().strip());
-			((WorkshopTableModel) tbl_workshops.getModel()).getWorkshops().add(workshop);
-			globals.getWorkshopComboBoxModel().addElement(tf_workshopname.getText());
-			globals.fireTableDataChanged();
-			globals.setWorkshopssaved(false);
-			logger.trace("Submit workshop entry to table");
+			if (globals.getWorkshops().exists(tf_workshopname.getText().strip())) {
+				JOptionPane.showMessageDialog(this, "A workshop with this name already exists.", "Error",
+						JOptionPane.ERROR_MESSAGE);
+
+			} else {
+				Workshop workshop = new Workshop(tf_workshopname.getText().strip(), (String) cb_badge.getSelectedItem(),
+						tf_fromDate.getText().strip(), tf_toDate.getText().strip(), tf_URL.getText().strip());
+				((WorkshopTableModel) tbl_workshops.getModel()).getWorkshops().add(workshop);
+				globals.getWorkshopComboBoxModel().addElement(tf_workshopname.getText());
+				globals.fireTableDataChanged();
+				globals.setWorkshopssaved(false);
+				logger.trace("Submit workshop entry to table");
+			}
 		}
 		if (e.getActionCommand().equals("Update")) {
 			table2Workshop(selected_row, tbl_workshops);

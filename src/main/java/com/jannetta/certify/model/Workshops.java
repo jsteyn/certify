@@ -41,5 +41,12 @@ public class Workshops extends ArrayList<Workshop>{
 		return ret;
 	}
 
+	public boolean exists(String workshopName){
+		for (int i = 0; i < this.size(); i++) {
+			if (get(i).getWorkshop_name().equals(workshopName))
+			return true;
+		}
+		return false;
+	}
 
 }

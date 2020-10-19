@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
 public class Learner {
 	private static Logger logger = LoggerFactory.getLogger(Learner.class);
 	private static final String[] columnNames = { "Workshop Name", "Badge", "Instructor", "User ID", "Firstname",
-			"Initials", "Lastname", "Email", "Date", "Print" };
+			"Initials", "Lastname", "Email", "Date", "Lessons", "Print" };
 
 	@SerializedName("workshop")
 	@Expose
@@ -47,11 +47,17 @@ public class Learner {
 	@Expose
 	private String date;
 
+	@SerializedName("lessons")
+	@Expose
+	private Lessons lessons;
+
 	private boolean print = false;
 
 	public Learner(String workshop, String badge, String instructor, String user_id, String firstname, String initials,
-			String lastname, String email, String date) {
+			String lastname, String email, String date, Lessons lessons) {
 		super();
+		// get lesson codes
+
 		this.workshop = workshop;
 		this.badge = badge;
 		this.instructor = instructor;
@@ -62,6 +68,7 @@ public class Learner {
 		this.email = email;
 		this.date = date;
 		this.print = false;
+		this.lessons = lessons;
 		logger.trace("Create a learner");
 	}
 
@@ -138,12 +145,30 @@ public class Learner {
 	}
 
 	public static int getColumnNumber() {
-		logger.debug("Number of columns in learner: " + columnNames.length);
 		return columnNames.length;
 	}
-	
+
 	public static String[] getColumnNames() {
 		return columnNames;
+	}
+
+	public Lessons getLessons() {
+		return lessons;
+	}
+
+	public String getLessonString() {
+		String ret = "";
+		if (!(lessons==null))
+		for (int i = 0; i < lessons.size(); i++) {
+			ret += lessons.get(i).getLessonID();
+			if (i < lessons.size() - 1)
+				ret += ",";
+		}
+		return ret;
+	}
+
+	public void setLessons(Lessons lessons) {
+		this.lessons = lessons;
 	}
 
 	public boolean isPrint() {

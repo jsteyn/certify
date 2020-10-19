@@ -32,7 +32,10 @@ import com.google.gson.JsonIOException;
 import com.jannetta.certify.model.Learner;
 import com.jannetta.certify.model.LearnerTableModel;
 import com.jannetta.certify.model.Learners;
+import com.jannetta.certify.model.Lesson;
+import com.jannetta.certify.model.LessonTableModel;
 import com.jannetta.certify.model.Workshop;
+import com.jannetta.certify.model.Lessons;
 import com.jannetta.certify.model.WorkshopComboBoxModel;
 import com.jannetta.certify.model.WorkshopTableModel;
 import com.jannetta.certify.model.Workshops;
@@ -51,30 +54,40 @@ public class Globals {
 	private static Workshops workshops = new Workshops();
 	private static Learners all_learners = new Learners();
 	private static Learners learners = all_learners;
+	private static Lessons lessons = new Lessons();
 	private static GsonBuilder gsonBuilder = new GsonBuilder();
 	private static Gson gson = gsonBuilder.setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
-	private static Properties properties = new Properties();
+	private static Properties properties;
 	private static String propertyfile = "system.properties";
 	private static String workshopfile = "Workshops.json";
 	private static String learnerfile = "Learners.json";
+	private static String lessonfile = "Lessons.json";
 	private static WorkshopTableModel workshopTableModel = new WorkshopTableModel();
 	private static LearnerTableModel learnerTableModel = new LearnerTableModel();
 	private static WorkshopComboBoxModel workshopComboBoxModel;
+	private static LessonTableModel lessonTableModel = new LessonTableModel();
 	private boolean workshopssaved = true;
 	private boolean learnerssaved = true;
+	private boolean lessonssaved = true;
 
 	public static Globals getInstance() {
 		if (globals == null) {
 			globals = new Globals();
 
-			globals.checkFile(propertyfile); // If the file doesn't exist create it
-			loadProperties();
-			workshops = globals.loadWorkshops();
-			workshopComboBoxModel = new WorkshopComboBoxModel(globals.getWorkshops().getWorkshopNames());
-			all_learners = globals.loadLearners();
+			checkFile(propertyfile); // If the file doesn't exist create it
+
+			properties = loadProperties();
+
+			// Load data from files
+			workshops = loadWorkshops(workshops);
+			lessons = loadLessons(lessons);
+			all_learners = loadLearners(learners);
 			learners = all_learners;
+
+			workshopComboBoxModel = new WorkshopComboBoxModel(globals.getWorkshops().getWorkshopNames());
 			workshopTableModel.setWorkshops(workshops);
 			learnerTableModel.setLearners(learners);
+			lessonTableModel.setLessons(lessons);
 		}
 		return globals;
 	}
@@ -95,42 +108,55 @@ public class Globals {
 		fireTableDataChanged();
 	}
 
-	private Workshops loadWorkshops() {
-		Workshops workshops = null;
+	private static Workshops loadWorkshops(Workshops ws) {
 		try {
-			logger.trace("Loading " + getProperty("workshopfile"));
-			checkFile(getProperty("workshopfile")); // If the file doesn't exist create it
-			Reader reader = Files.newBufferedReader(Paths.get(getProperty("workshopfile")));
-			workshops = gson.fromJson(reader, Workshops.class);
-			if (workshops == null) {
-				workshops = new Workshops();
+			logger.trace("Loading " + globals.getProperty("workshopfile"));
+			checkFile(globals.getProperty("workshopfile")); // If the file doesn't exist create it
+			Reader reader = Files.newBufferedReader(Paths.get(globals.getProperty("workshopfile")));
+			ws = gson.fromJson(reader, Workshops.class);
+			if (ws == null) {
+				ws = new Workshops();
 			}
 			reader.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return workshops;
+		return ws;
 	}
 
-	private Learners loadLearners() {
+	private static Learners loadLearners(Learners lrns) {
 		try {
-			logger.trace("Loading " + getProperty("learnerfile"));
-			checkFile(learnerfile); // If the file doesn't exist create it
-			Reader reader = Files.newBufferedReader(Paths.get(properties.getProperty("learnerfile")));
-			Learners all_learners = gson.fromJson(reader, Learners.class);
-			if (all_learners == null) {
-				all_learners = new Learners();
-				learners = all_learners;
+			logger.trace("Loading " + globals.getProperty("learnerfile"));
+			checkFile(globals.getProperty("learnerfile")); // If the file doesn't exist create it
+			Reader reader = Files.newBufferedReader(Paths.get(globals.getProperty("learnerfile")));
+			lrns = gson.fromJson(reader, Learners.class);
+			if (lrns == null) {
+				lrns = new Learners();
 			}
 			reader.close();
-			return all_learners;
 		} catch (IOException e) {
 			logger.error(e.getMessage());
-			return null;
 		}
+		return lrns;
 	}
 
-	private void checkFile(String filename) {
+	private static Lessons loadLessons(Lessons lessons) {
+		try {
+			logger.trace("Loading " + globals.getProperty("lessonfile"));
+			checkFile(globals.getProperty("lessonfile")); // If the file doesn't exist create it
+			Reader reader = Files.newBufferedReader(Paths.get(globals.getProperty("lessonfile")));
+			lessons = gson.fromJson(reader, Lessons.class);
+			if (lessons == null) {
+				lessons = new Lessons();
+			}
+			reader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return lessons;
+	}
+
+	private static void checkFile(String filename) {
 		try {
 			logger.debug("Check if file " + filename + " exists.");
 			File f1 = new File(filename);
@@ -144,7 +170,7 @@ public class Globals {
 	/**
 	 * Load properties from system.properties file
 	 */
-	public static void loadProperties() {
+	public static Properties loadProperties() {
 		logger.trace("Load properties from " + propertyfile);
 		properties = new Properties();
 		try {
@@ -163,6 +189,7 @@ public class Globals {
 				logger.trace("Add basic properties");
 				properties.setProperty("learnerfile", learnerfile);
 				properties.setProperty("workshopfile", workshopfile);
+				properties.setProperty("lessonfile", lessonfile);
 			}
 			FileOutputStream out = new FileOutputStream(propertyfile);
 			properties.store(out, "");
@@ -171,6 +198,7 @@ public class Globals {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return properties;
 	}
 
 	/**
@@ -232,6 +260,15 @@ public class Globals {
 		return null;
 	}
 
+	public Lesson findLesson(String lessonID) {
+		for (int i = 0; i < lessons.size(); i++) {
+			if (lessons.get(i).getLessonID().equals(lessonID)) {
+				return lessons.get(i);
+			}
+		}
+		return null;
+	}
+
 	public void setLearners(Learners learners) {
 		Globals.learners = learners;
 	}
@@ -268,6 +305,7 @@ public class Globals {
 		try {
 			Writer writer = new FileWriter(filename);
 			gson.toJson(object, writer);
+			logger.debug("Saving " + filename);
 			writer.close();
 		} catch (JsonIOException e) {
 			// TODO Auto-generated catch block
@@ -294,6 +332,15 @@ public class Globals {
 		this.learnerssaved = learnerssaved;
 	}
 
+	public void setLessonssaved(boolean lessonssaved) {
+		logger.debug("Set lessons saved to " + lessonssaved);
+		this.lessonssaved = lessonssaved;
+	}
+
+	public boolean isLessonssaved() {
+		return lessonssaved;
+	}
+
 	public String[] getBadges() {
 		return badges;
 	}
@@ -307,6 +354,8 @@ public class Globals {
 		logger.trace("Update workshop table model");
 		learnerTableModel.fireTableDataChanged();
 		logger.trace("Update learner table model");
+		lessonTableModel.fireTableDataChanged();
+		logger.trace("Update lesson table model");
 	}
 
 	public static void svg2pdf(String certificate, String userID) {
@@ -371,6 +420,21 @@ public class Globals {
 		return learners;
 	}
 
+	public static Lessons delLessons(Lessons lessons) {
+		ArrayList<Lesson> delLessons = new ArrayList<Lesson>();
+		for (int i = 0; i < lessons.size(); i++) {
+			if (lessons.get(i).isPrint()) {
+				delLessons.add(lessons.get(i));
+			}
+		}
+		for (int i = 0; i < delLessons.size(); i++) {
+			lessons.remove(delLessons.get(i));
+			globals.setLessonssaved(false);
+		}
+		return lessons;
+	}
+
+	
 	public Learners readCSVLearnersFile(Learners learners, File filename, String workshop) {
 		try {
 			Scanner sc = new Scanner(filename);
@@ -380,7 +444,7 @@ public class Globals {
 				String[] tokens = line.split(",");
 				// workshop, instructor, user_id, name, email, date
 				Learner learner = new Learner(workshop, tokens[0].split("-")[0], tokens[1], tokens[2], tokens[3], "",
-						"", tokens[4], tokens[5]);
+						"", tokens[4], tokens[5], new Lessons());
 				learners.add(learner);
 			}
 			sc.close();
@@ -400,7 +464,7 @@ public class Globals {
 				String[] tokens = line.split(" ");
 				date = (date.strip().equals("") ? now() : date);
 				Learner learner = new Learner(workshop, badge, instructor, tokens[0] + "_" + tokens[1], tokens[0], "",
-						tokens[1], tokens[2].substring(1, tokens[2].length() - 1), date);
+						tokens[1], tokens[2].substring(1, tokens[2].length() - 1), date, new Lessons());
 				learners.add(learner);
 			}
 			sc.close();
@@ -411,10 +475,24 @@ public class Globals {
 		return learners;
 	}
 
+
+	public Lessons getLessons() {
+		return lessons;
+	}
+
+	public void setLessons(Lessons lessons) {
+		Globals.lessons = lessons;
+	}
+
+	public LessonTableModel getLessonTableModel() {
+		return lessonTableModel;
+	}
+	
 	public static String now() {
 		String DATE_FORMAT_NOW = "dd MMM yyyy";
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
 		return sdf.format(cal.getTime());
 	}
+
 }

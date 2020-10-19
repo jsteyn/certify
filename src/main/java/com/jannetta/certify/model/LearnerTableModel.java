@@ -38,6 +38,8 @@ public class LearnerTableModel extends AbstractTableModel {
 			case 8:
 				return learner.getDate();
 			case 9:
+				return learner.getLessonString();
+			case 10:
 				return learner.isPrint();
 		}
 
@@ -79,7 +81,7 @@ public class LearnerTableModel extends AbstractTableModel {
 
 	@Override
 	public Class<?> getColumnClass(int columnIndex) {
-		if (columnIndex == learners.getColumnCount() - 1) {
+		if (columnIndex == Learners.getColumnCount() - 1) {
 			return Boolean.class;
 		} else {
 			return String.class;

@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 import com.jannetta.certify.controller.Globals;
 
 public class MainFrame extends JFrame {
-	
+
 	/**
 	 * 
 	 */
@@ -35,7 +35,6 @@ public class MainFrame extends JFrame {
 	static MenuBar menuBar = new MenuBar();
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
-
 	public MainFrame() {
 		super("Certify");
 		try {
@@ -46,10 +45,10 @@ public class MainFrame extends JFrame {
 		} catch (UnsupportedLookAndFeelException e) {
 		}
 
-		//TODO FIX THIS
-        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
- 
-       Toolkit toolkit = Toolkit.getDefaultToolkit();
+		// TODO FIX THIS
+		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+		Toolkit toolkit = Toolkit.getDefaultToolkit();
 		try {
 			Image icon = toolkit.getImage(ClassLoader.getSystemResource("Certify.png"));
 
@@ -57,10 +56,11 @@ public class MainFrame extends JFrame {
 		} catch (NullPointerException e) {
 			logger.error("Certify.png not found.");
 		}
-       setJMenuBar(menuBar);
+		setJMenuBar(menuBar);
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				closer();
+				System.exit(0);
 			}
 		});
 
@@ -77,7 +77,7 @@ public class MainFrame extends JFrame {
 					"Exit Certify?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if (result1 == JOptionPane.YES_OPTION) {
 				logger.trace("Save learner file");
-				globals.saveJSON("Learners.json", globals.getAllLearners());
+				globals.saveJSON(globals.getProperty("learnerfile"), globals.getAllLearners());
 				globals.setLearnerssaved(true);
 			} else if (result1 == JOptionPane.NO_OPTION) {
 				logger.trace("Quit without saving learners");
@@ -92,13 +92,28 @@ public class MainFrame extends JFrame {
 					"Exit Certify?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if (result2 == JOptionPane.YES_OPTION) {
 				logger.trace("Save workshop file");
-				globals.saveJSON("Workshops.json", globals.getWorkshops());
+				globals.saveJSON(globals.getProperty("workshopfile"), globals.getWorkshops());
 				globals.setWorkshopssaved(true);
 			} else if (result2 == JOptionPane.NO_OPTION) {
 				logger.trace("Quit without saving workshops");
 			} else {
 				logger.trace("Cancel quitting");
 			}
+		}
+		logger.debug("lessons file: " + globals.isLessonssaved());
+		if (!globals.isLessonssaved()) {
+			int result2 = JOptionPane.showConfirmDialog(this, "Do you want to save lessons before exiting Certify",
+					"Exit Certify?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			if (result2 == JOptionPane.YES_OPTION) {
+				logger.trace("Save lessons file");
+				globals.saveJSON(globals.getProperty("lessonfile"), globals.getLessons());
+				globals.setLessonssaved(true);
+			} else if (result2 == JOptionPane.NO_OPTION) {
+				logger.trace("Quit without saving lessons");
+			} else {
+				logger.trace("Cancel quitting");
+			}
+
 		}
 	}
 }

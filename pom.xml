@@ -7,16 +7,27 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Certificate Maker</name>
 	<properties>
-		<maven.compiler.source>11</maven.compiler.source>
-		<maven.compiler.target>11</maven.compiler.target>
+		<maven.compiler.source>15</maven.compiler.source>
+		<maven.compiler.target>15</maven.compiler.target>
 	</properties>
 	<build>
 		<finalName>Certify</finalName>
-		<plugins>
+    <plugins>
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.0.2</version>
+        <executions>
+          <execution>
+            <id>default-jar</id>
+            <phase>none</phase>
+          </execution>
+        </executions>
+      </plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
+        <configuration>
+          <finalName>Certify</finalName>
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
@@ -27,7 +38,7 @@
 						</manifest>
 					</archive>
 				</configuration>
-				<executions>
+        <executions>
 					<execution>
 						<id>make-assembly</id>
 						<!-- bind to the packaging phase -->

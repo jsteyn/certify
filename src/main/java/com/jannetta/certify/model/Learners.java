@@ -37,6 +37,13 @@ public class Learners extends ArrayList<Learner> {
 		this.learners = learners;
 	}
 
-
+	public boolean exists(String learnerID) {
+		for (int i = 0; i < this.size(); i++) {
+			if (this.get(i).getUser_id().equals(learnerID)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 }
