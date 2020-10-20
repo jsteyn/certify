@@ -373,6 +373,7 @@ public class LearnerPanel extends JPanel implements ActionListener {
 	 */
 	public void table2Learners(int row, JTable learnerTable) {
 		// Learner learner = globals.getAllLearners().get(row);
+		Lessons lessons = pnl_lessonselection.getSelectedLessons();
 		Learner learner = globals.findLearner(globals.getLearners().get(row).getUser_id());
 		learner.setWorkshop((String) cb_workshopnames.getSelectedItem());
 		learner.setBadge((String) cb_badge.getSelectedItem());
@@ -383,6 +384,7 @@ public class LearnerPanel extends JPanel implements ActionListener {
 		learner.setInitials(tf_initials.getText().strip());
 		learner.setEmail(tf_email.getText().strip());
 		learner.setDate(tf_date.getText().strip());
+		learner.setLessons(lessons);
 
 		globals.getWorkshopComboBoxModel().setWorkshops((globals.getWorkshops().getWorkshopNames()));
 

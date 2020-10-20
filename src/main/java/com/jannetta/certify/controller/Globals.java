@@ -461,10 +461,10 @@ public class Globals {
 			Scanner sc = new Scanner(file);
 			while (sc.hasNext()) {
 				String line = sc.nextLine().strip();
-				String[] tokens = line.split(" ");
+				String[] tokens = line.split(",");
 				date = (date.strip().equals("") ? now() : date);
-				Learner learner = new Learner(workshop, badge, instructor, tokens[0] + "_" + tokens[1], tokens[0], "",
-						tokens[1], tokens[2].substring(1, tokens[2].length() - 1), date, new Lessons());
+				Learner learner = new Learner(workshop, badge, instructor, (tokens[0] + "_" + tokens[1]).replace(" ", "_"), tokens[0], "",
+						tokens[1], tokens[2], date, new Lessons());
 				learners.add(learner);
 			}
 			sc.close();
