@@ -1,13 +1,9 @@
 
 
-import javax.swing.JFrame;
 import com.jannetta.certify.view.*;
 
-public class Main extends JFrame {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+public class Main {
+
 
 	public static void main(String[] args) {
 

@@ -11,10 +11,10 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 
+import com.jannetta.certify.controller.Globals;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.jannetta.certify.controller.Globals;
 
 public class MainFrame extends JFrame {
 
@@ -51,7 +51,8 @@ public class MainFrame extends JFrame {
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
 		try {
 			Image icon = toolkit.getImage(ClassLoader.getSystemResource("Certify.png"));
-
+			//URL resource = getClass().getClassLoader().getResource("Certify1.png");
+			//BufferedImage image = ImageIO.read(resource);
 			setIconImage(icon);
 		} catch (NullPointerException e) {
 			logger.error("Certify.png not found.");

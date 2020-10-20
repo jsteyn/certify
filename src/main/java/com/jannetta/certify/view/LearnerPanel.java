@@ -26,9 +26,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.TableColumn;
 
+import com.jannetta.certify.controller.FileTypeFilter;
 import com.jannetta.certify.controller.Globals;
 import com.jannetta.certify.model.Learner;
 import com.jannetta.certify.model.LearnerTableModel;
@@ -330,8 +332,11 @@ public class LearnerPanel extends JPanel implements ActionListener {
 						JOptionPane.ERROR_MESSAGE);
 			} else {
 				final JFileChooser fc = new JFileChooser();
-				FileNameExtensionFilter filter = new FileNameExtensionFilter("txt", "txt");
-				fc.setFileFilter(filter);
+				FileFilter docFilter = new FileTypeFilter(".txt", "Text file");
+				FileFilter pdfFilter = new FileTypeFilter(".csv", "Comma separated value file");
+				fc.addChoosableFileFilter(docFilter);
+				fc.addChoosableFileFilter(pdfFilter);
+				//fc.setFileFilter(docF);
 				int returnVal = fc.showOpenDialog(this);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					File file = fc.getSelectedFile();
