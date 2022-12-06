@@ -72,6 +72,8 @@ public class LearnerPanel extends JPanel implements ActionListener {
 	private JTextField tf_date = new JTextField(15);
 	private LessonSelectionPanel pnl_lessonselection;
 	private JTable tbl_learners;
+	private JPanel pnl_main_left = new JPanel();
+	private JPanel pnl_main_right = new JPanel();
 	private JPanel buttonPanel1 = new JPanel();
 	private JPanel buttonPanel2 = new JPanel();
 	private JButton btn_submit = new JButton("Submit");
@@ -173,8 +175,11 @@ public class LearnerPanel extends JPanel implements ActionListener {
 		tc.setHeaderRenderer(checkboxHeader);
 
 		// Set panel layout
-		MigLayout migLayout = new MigLayout("fillx", "[]rel[]rel[]", "[]10[]10[]");
+		MigLayout migLayout = new MigLayout("fillx", "[]rel[]", "[]10[]");
 		setLayout(migLayout);
+
+		MigLayout left_panel_layout = new MigLayout( "fillx", "[]rel[]");
+		pnl_main_left.setLayout(left_panel_layout);
 
 		// Add buttons to panels
 		buttonPanel1.add(btn_submit);
@@ -189,26 +194,31 @@ public class LearnerPanel extends JPanel implements ActionListener {
 
 		// Add components to main panel
 		// Form components
-		add(lbl_workshop);
-		add(cb_workshopnames);
-		add(pnl_lessonselection, "span 1 3, wrap");
-		add(lbl_badge);
-		add(cb_badge, "wrap");
-		add(lbl_instructor);
-		add(tf_instructor, "wrap");
-		add(lbl_user_id);
-		add(tf_user_id, "wrap");
-		add(lbl_firstname);
-		add(tf_firstname, "wrap");
-		add(lbl_initials);
-		add(tf_initials, "wrap");
-		add(lbl_lastname);
-		add(tf_lastname, "wrap");
-		add(lbl_email);
-		add(tf_email, "wrap");
-		add(lbl_date);
-		add(tf_date, "wrap");
+		pnl_main_left.add(lbl_workshop);
+		pnl_main_left.add(cb_workshopnames, "wrap");
+		pnl_main_left.add(lbl_badge);
+		pnl_main_left.add(cb_badge, "wrap");
+		pnl_main_left.add(lbl_instructor);
+		pnl_main_left.add(tf_instructor, "wrap");
+		pnl_main_left.add(lbl_user_id);
+		pnl_main_left.add(tf_user_id, "wrap");
+		pnl_main_left.add(lbl_firstname);
+		pnl_main_left.add(tf_firstname, "wrap");
+		pnl_main_left.add(lbl_initials);
+		pnl_main_left.add(tf_initials, "wrap");
+		pnl_main_left.add(lbl_lastname);
+		pnl_main_left.add(tf_lastname, "wrap");
+		pnl_main_left.add(lbl_email);
+		pnl_main_left.add(tf_email, "wrap");
+		pnl_main_left.add(lbl_date);
+		pnl_main_left.add(tf_date, "wrap");
 
+		pnl_main_right.add(pnl_lessonselection, "span 1 3, wrap");
+
+
+
+		add(pnl_main_left);
+		add(pnl_main_right, "wrap");
 		// Panel 1 with buttons
 		add(buttonPanel1, "span, wrap");
 
@@ -226,6 +236,7 @@ public class LearnerPanel extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals("comboBoxChanged")) {
 			String view = (String) cb_workshopnames.getSelectedItem();
+			if (view == null) view = "";
 			if (!(globals.getAllLearners() == null))
 				globals.getAllLearners().forEach((learner) -> {
 					learner.setPrint(false);
@@ -241,6 +252,10 @@ public class LearnerPanel extends JPanel implements ActionListener {
 			} else if (globals.getAllLearners().exists(tf_user_id.getText().strip())) {
 				JOptionPane.showMessageDialog(this, "A learner with this ID already exists.", "Error",
 						JOptionPane.ERROR_MESSAGE);
+			} else if (cb_workshopnames.getSelectedItem().equals("All") || (cb_workshopnames.getSelectedIndex() == -1)) {
+				JOptionPane.showMessageDialog(this, "You have to select a workshop.", "Error",
+						JOptionPane.ERROR_MESSAGE);
+
 			} else {
 				Lessons lessons = pnl_lessonselection.getSelectedLessons();
 				Learner learner = new Learner((String) cb_workshopnames.getSelectedItem(),
