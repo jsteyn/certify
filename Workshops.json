@@ -1,0 +1,23 @@
+[
+  {
+    "workshop_name": "Software Carpentries",
+    "badge": "swc",
+    "date_from": "",
+    "date_to": "",
+    "URL": ""
+  },
+  {
+    "workshop_name": "Data Carpentries",
+    "badge": "dc",
+    "date_from": "",
+    "date_to": "",
+    "URL": ""
+  },
+  {
+    "workshop_name": "Library Carpentries",
+    "badge": "lc",
+    "date_from": "",
+    "date_to": "",
+    "URL": ""
+  }
+]
