@@ -7,4 +7,5 @@ data/
 *.pdf
 *.csv
 *.txt
+.idea/
 system.properties
