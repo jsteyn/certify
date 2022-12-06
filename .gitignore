@@ -3,7 +3,7 @@
 .settings
 .factorypath
 target/
-*.json
+data/
 *.pdf
 *.csv
 *.txt
