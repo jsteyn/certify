@@ -26,4 +26,6 @@ If there is a need for the use of a database, I can add it in time.
 If you don't want these pre-populated data files, you can just delete them. The
 program will create empty files on startup if they don't exist.
 
-When you start the program it will display the 
+When you start the program it will display the `Workshop Panel`:
+
+![Workshop Panel](Certify_Workshops.png)
