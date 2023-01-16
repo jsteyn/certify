@@ -1,9 +1,7 @@
 package com.jannetta.certify.model;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.DefaultComboBoxModel;
 
@@ -17,38 +15,25 @@ public class WorkshopComboBoxModel extends DefaultComboBoxModel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private Logger logger = LoggerFactory.getLogger(getClass());
-	private Globals globals = Globals.getInstance();
-	private List<String> workshops;
+	final private Logger logger = LoggerFactory.getLogger(getClass());
+	final private Globals globals = Globals.getInstance();
+	private List<String> workshopIDs;
 	private String selection = null;
 
-	WorkshopComboBoxModel() {
-		super();
-	}
-
 	public WorkshopComboBoxModel(String[] items) {
-		logger.debug("init workshopcombomodel");
-		workshops = Arrays.asList(globals.getWorkshops().getWorkshopNames());
+		logger.trace("init workshopcombomodel");
+		workshopIDs = Arrays.asList(globals.getWorkshops().getWorkshopIDs());
 		setSelectedItem(items[0]);
-	}
-
-	public WorkshopComboBoxModel(Vector<String> items) {
-		Collections.sort(items);
-		int size = items.size();
-		for (int i = 0; i < size; i++) {
-			super.addElement((Object)items.elementAt(i));
-		}
-		setSelectedItem(items.elementAt(0));
 	}
 
 	@Override
 	public String getElementAt(int index) {
-		return workshops.get(index);
+		return workshopIDs.get(index);
 	}
 
 	@Override
 	public int getSize() {
-		return workshops.size();
+		return workshopIDs.size();
 	}
 
 	@Override
@@ -66,18 +51,18 @@ public class WorkshopComboBoxModel extends DefaultComboBoxModel {
 		insertElementAt(element, 0);
 	}
 	
-	public String[] getWorkshops() {
-		return workshops.toArray(new String[0]);
+	public String[] getWorkshopIDs() {
+		return workshopIDs.toArray(new String[0]);
 	}
 
-	public void setWorkshops(String[] workshops) {
-		this.workshops = Arrays.asList(workshops);
+	public void setWorkshopIDs(String[] workshopIDs) {
+		this.workshopIDs = Arrays.asList(workshopIDs);
 	}
 
 	@Override
 	public void insertElementAt(Object element, int index) {
 		logger.trace("Add element " + (String) element + " to ComboBox");
-		workshops = Arrays.asList(globals.getWorkshops().getWorkshopNames());
+		workshopIDs = Arrays.asList(globals.getWorkshops().getWorkshopIDs());
 		super.insertElementAt(element, index);
 	}
 }

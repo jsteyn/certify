@@ -72,14 +72,14 @@ public class MainFrame extends JFrame {
 	}
 
 	private void closer() {
-		logger.debug("learners file: " + globals.isLearnerssaved());
-		if (!globals.isLearnerssaved()) {
+		logger.debug("learners file: " + globals.isLearnersSaved());
+		if (!globals.isLearnersSaved()) {
 			int result1 = JOptionPane.showConfirmDialog(this, "Do you want to save learners before exiting Certify",
 					"Exit Certify?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if (result1 == JOptionPane.YES_OPTION) {
 				logger.trace("Save learner file");
 				globals.saveJSON(globals.getProperty("learnerfile"), globals.getAllLearners());
-				globals.setLearnerssaved(true);
+				globals.setLearnersSaved(true);
 			} else if (result1 == JOptionPane.NO_OPTION) {
 				logger.trace("Quit without saving learners");
 			} else {
@@ -87,28 +87,28 @@ public class MainFrame extends JFrame {
 			}
 
 		}
-		logger.debug("workshops file: " + globals.isWorkshopssaved());
-		if (!globals.isWorkshopssaved()) {
+		logger.debug("workshops file: " + globals.isWorkshopsSaved());
+		if (!globals.isWorkshopsSaved()) {
 			int result2 = JOptionPane.showConfirmDialog(this, "Do you want to save workshops before exiting Certify",
 					"Exit Certify?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if (result2 == JOptionPane.YES_OPTION) {
 				logger.trace("Save workshop file");
 				globals.saveJSON(globals.getProperty("workshopfile"), globals.getWorkshops());
-				globals.setWorkshopssaved(true);
+				globals.setWorkshopsSaved(true);
 			} else if (result2 == JOptionPane.NO_OPTION) {
 				logger.trace("Quit without saving workshops");
 			} else {
 				logger.trace("Cancel quitting");
 			}
 		}
-		logger.debug("lessons file: " + globals.isLessonssaved());
-		if (!globals.isLessonssaved()) {
+		logger.debug("lessons file: " + globals.isLessonsSaved());
+		if (!globals.isLessonsSaved()) {
 			int result2 = JOptionPane.showConfirmDialog(this, "Do you want to save lessons before exiting Certify",
 					"Exit Certify?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if (result2 == JOptionPane.YES_OPTION) {
 				logger.trace("Save lessons file");
 				globals.saveJSON(globals.getProperty("lessonfile"), globals.getLessons());
-				globals.setLessonssaved(true);
+				globals.setLessonsSaved(true);
 			} else if (result2 == JOptionPane.NO_OPTION) {
 				logger.trace("Quit without saving lessons");
 			} else {

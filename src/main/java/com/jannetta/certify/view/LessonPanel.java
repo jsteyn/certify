@@ -141,7 +141,7 @@ public class LessonPanel extends JPanel implements ActionListener {
             } else {
                 globals.getLessons().add(lesson);
                 globals.fireTableDataChanged();
-                globals.setLessonssaved(false);
+                globals.setLessonsSaved(false);
                 logger.trace("Submit lesson entry to table");
             }
         }
@@ -150,7 +150,7 @@ public class LessonPanel extends JPanel implements ActionListener {
             btn_update.setEnabled(false);
             btn_cancel.setEnabled(false);
             btn_submit.setEnabled(true);
-            globals.setLessonssaved(false);
+            globals.setLessonsSaved(false);
 
         }
         if (e.getActionCommand().equals("Cancel")) {
@@ -161,7 +161,7 @@ public class LessonPanel extends JPanel implements ActionListener {
         if (e.getActionCommand().equals("Save")) {
             logger.trace("Save file");
             globals.saveJSON(globals.getProperty("lessonfile"), globals.getLessons());
-            globals.setLessonssaved(true);
+            globals.setLessonsSaved(true);
         }
         if (e.getActionCommand().equals("Delete")) {
             Lessons lessons = globals.getLessons();

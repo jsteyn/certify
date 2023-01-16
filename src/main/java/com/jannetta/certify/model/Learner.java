@@ -8,12 +8,15 @@ import com.google.gson.annotations.SerializedName;
 
 public class Learner {
 	private static Logger logger = LoggerFactory.getLogger(Learner.class);
-	private static final String[] columnNames = { "Workshop Name", "Badge", "Instructor", "User ID", "Firstname",
+	private static final String[] columnNames = { "Workshop ID", "Workshop Name", "Badge", "Instructor", "User ID", "Firstname",
 			"Initials", "Lastname", "Email", "Date", "Lessons", "Print" };
 
+	@SerializedName("workshopID")
+	@Expose
+	private String workshopID;
 	@SerializedName("workshop")
 	@Expose
-	private String workshop;
+	private String workshopName;
 
 	@SerializedName("badge")
 	@Expose
@@ -53,12 +56,13 @@ public class Learner {
 
 	private boolean print = false;
 
-	public Learner(String workshop, String badge, String instructor, String user_id, String firstname, String initials,
-			String lastname, String email, String date, Lessons lessons) {
+	public Learner(String workshopID, String workshopName, String badge, String instructor, String user_id, String firstname, String initials,
+				   String lastname, String email, String date, Lessons lessons) {
 		super();
 		// get lesson codes
 
-		this.workshop = workshop;
+		this.workshopID = workshopID;
+		this.workshopName = workshopName;
 		this.badge = badge;
 		this.instructor = instructor;
 		this.user_id = user_id;
@@ -72,12 +76,19 @@ public class Learner {
 		logger.trace("Create a learner");
 	}
 
-	public String getWorkshop() {
-		return workshop;
+	public String getWorkshopID() {
+		return workshopID;
 	}
 
-	public void setWorkshop(String workshop) {
-		this.workshop = workshop;
+	public void setWorkshopID(String workshopID) {
+		this.workshopID = workshopID;
+	}
+	public String getWorkshopName() {
+		return workshopName;
+	}
+
+	public void setWorkshopName(String workshopName) {
+		this.workshopName = workshopName;
 	}
 
 	public String getBadge() {

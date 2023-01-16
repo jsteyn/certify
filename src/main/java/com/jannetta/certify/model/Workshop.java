@@ -8,7 +8,11 @@ import com.google.gson.annotations.SerializedName;
 
 public class Workshop {
 	private Logger logger = LoggerFactory.getLogger(getClass());
-	private static final String[] columnNames = {"Workshop Name", "Badge", "Date From", "Date To", "URL", "Print"};
+	private static final String[] columnNames = {"Workshop ID", "Workshop Name", "Badge", "Date From", "Date To", "URL", "Print"};
+
+	@SerializedName("workshop_id")
+	@Expose
+	private String workshop_id;
 
 	@SerializedName("workshop_name")
 	@Expose
@@ -36,8 +40,9 @@ public class Workshop {
 	
 	private boolean print = false;
 
-	public Workshop(String workshop_name, String badge, String date_from, String date_to, String url) {
+	public Workshop(String workshop_id, String workshop_name, String badge, String date_from, String date_to, String url) {
 		super();
+		this.workshop_id = workshop_id;
 		this.workshop_name = workshop_name;
 		this.badge = badge;
 		this.date_from = date_from;
@@ -46,6 +51,10 @@ public class Workshop {
 		this.print = false;
 		logger.trace("Create a workshop");
 	}
+
+	public String getWorkshop_id() { return workshop_id; }
+
+	public void setWorkshop_id(String workshop_id) {this.workshop_id = workshop_id;}
 
 	public String getWorkshop_name() {
 		return workshop_name;

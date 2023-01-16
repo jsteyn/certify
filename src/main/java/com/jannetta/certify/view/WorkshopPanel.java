@@ -38,11 +38,13 @@ public class WorkshopPanel extends JPanel implements ActionListener {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	private Globals globals = Globals.getInstance();
 
+	private JLabel lbl_workshopID = new JLabel("Workshop ID");
 	private JLabel lbl_workshopname = new JLabel("Workshop Name");
 	private JLabel lbl_badge = new JLabel("Badge");
 	private JLabel lbl_fromDate = new JLabel("Date From");
 	private JLabel lbl_toDate = new JLabel("Date to");
 	private JLabel lbl_URL = new JLabel("Website URL");
+	private JTextField tf_workshopID = new JTextField(20);
 	private JTextField tf_workshopname = new JTextField(20);
 	private JComboBox<String> cb_badge = new JComboBox<String>(globals.getBadges());
 	private JTextField tf_fromDate = new JTextField(20);
@@ -100,11 +102,12 @@ public class WorkshopPanel extends JPanel implements ActionListener {
 						logger.trace("Double clicked workshop table entry");
 
 						// Transfer record to form
-						tf_workshopname.setText((String) table.getValueAt(selected_row, 0));
-						cb_badge.setSelectedItem((String) table.getValueAt(selected_row, 1));
-						tf_fromDate.setText((String) table.getValueAt(selected_row, 2));
-						tf_toDate.setText((String) table.getValueAt(selected_row, 3));
-						tf_URL.setText((String) table.getValueAt(selected_row, 4));
+						tf_workshopID.setText((String) table.getValueAt(selected_row, 0));
+						tf_workshopname.setText((String) table.getValueAt(selected_row, 1));
+						cb_badge.setSelectedItem((String) table.getValueAt(selected_row, 2));
+						tf_fromDate.setText((String) table.getValueAt(selected_row, 3));
+						tf_toDate.setText((String) table.getValueAt(selected_row, 4));
+						tf_URL.setText((String) table.getValueAt(selected_row, 5));
 
 						// Change button to "Update"
 						btn_submit.setEnabled(false);
@@ -132,6 +135,8 @@ public class WorkshopPanel extends JPanel implements ActionListener {
 		pnl_buttonholder.add(btn_cancel);
 		pnl_buttonholder.add(btn_delete);
 
+		add(lbl_workshopID, "");
+		add(tf_workshopID, "wrap");
 		add(lbl_workshopname, "");
 		add(tf_workshopname, "wrap");
 		add(lbl_badge);
@@ -151,6 +156,7 @@ public class WorkshopPanel extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 
 		if (e.getActionCommand().equals("Clear")) {
+			tf_workshopID.setText("");
 			tf_workshopname.setText("");
 			cb_badge.setSelectedItem(globals.getBadges()[0]);
 			tf_fromDate.setText("");
@@ -161,17 +167,17 @@ public class WorkshopPanel extends JPanel implements ActionListener {
 			btn_submit.setEnabled(true);
 		}
 		if (e.getActionCommand().equals("Submit")) {
-			if (globals.getWorkshops().exists(tf_workshopname.getText().strip())) {
+			if (globals.getWorkshops().exists(tf_workshopID.getText().strip())) {
 				JOptionPane.showMessageDialog(this, "A workshop with this name already exists.", "Error",
 						JOptionPane.ERROR_MESSAGE);
 
 			} else {
-				Workshop workshop = new Workshop(tf_workshopname.getText().strip(), (String) cb_badge.getSelectedItem(),
+				Workshop workshop = new Workshop(tf_workshopID.getText().strip(), tf_workshopname.getText().strip(), (String) cb_badge.getSelectedItem(),
 						tf_fromDate.getText().strip(), tf_toDate.getText().strip(), tf_URL.getText().strip());
 				((WorkshopTableModel) tbl_workshops.getModel()).getWorkshops().add(workshop);
 				globals.getWorkshopComboBoxModel().addElement(tf_workshopname.getText());
 				globals.fireTableDataChanged();
-				globals.setWorkshopssaved(false);
+				globals.setWorkshopsSaved(false);
 				logger.trace("Submit workshop entry to table");
 			}
 		}
@@ -181,7 +187,7 @@ public class WorkshopPanel extends JPanel implements ActionListener {
 			btn_update.setEnabled(false);
 			btn_cancel.setEnabled(false);
 			btn_submit.setEnabled(true);
-			globals.setWorkshopssaved(false);
+			globals.setWorkshopsSaved(false);
 		}
 		if (e.getActionCommand().equals("Cancel")) {
 			btn_update.setEnabled(false);
@@ -191,7 +197,7 @@ public class WorkshopPanel extends JPanel implements ActionListener {
 		if (e.getActionCommand().equals("Save")) {
 			logger.trace("Save file");
 			globals.saveJSON("Workshops.json", globals.getWorkshops());
-			globals.setWorkshopssaved(true);
+			globals.setWorkshopsSaved(true);
 		}
 		if (e.getActionCommand().equals("Delete")) {
 			int ret = globals.delWorkshops(globals.getAllLearners());
@@ -202,7 +208,7 @@ public class WorkshopPanel extends JPanel implements ActionListener {
 						"Error", JOptionPane.ERROR_MESSAGE);
 			} else {
 				globals.fireTableDataChanged();
-				globals.setWorkshopssaved(false);
+				globals.setWorkshopsSaved(false);
 			}
 			logger.trace("Delete workshops returned " + ret);
 
@@ -211,12 +217,13 @@ public class WorkshopPanel extends JPanel implements ActionListener {
 
 	public void table2Workshop(int row, JTable workshoptable) {
 		Workshop workshop = ((WorkshopTableModel) workshoptable.getModel()).getWorkshops().get(row);
+		workshop.setWorkshop_id(tf_workshopID.getText().strip());
 		workshop.setWorkshop_name(tf_workshopname.getText().strip());
 		workshop.setBadge((String) cb_badge.getSelectedItem());
 		workshop.setDate_from(tf_fromDate.getText().strip());
 		workshop.setDate_to(tf_toDate.getText().strip());
 		workshop.setUrl(tf_URL.getText().strip());
-		globals.getWorkshopComboBoxModel().setWorkshops((globals.getWorkshops().getWorkshopNames()));
+		globals.getWorkshopComboBoxModel().setWorkshopIDs((globals.getWorkshops().getWorkshopIDs()));
 
 	}
 }
