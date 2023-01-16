@@ -93,6 +93,7 @@ public class Globals {
     }
 
     public void learnersSetView(String view) {
+        logger.trace("View: " + view);
         learners = new Learners();
         if (view.equals("All")) {
             learners = all_learners;
@@ -381,9 +382,9 @@ public class Globals {
 
     }
 
-    private boolean inUse(String workshop, Learners learners) {
+    private boolean inUse(String workshop_id, Learners learners) {
         for (int l = 0; l < learners.size(); l++) {
-            if (learners.get(l).getWorkshopName().equals(workshop))
+            if (learners.get(l).getWorkshopID().equals(workshop_id))
                 return true;
         }
 
@@ -395,7 +396,7 @@ public class Globals {
         ArrayList<Workshop> delWorkshops = new ArrayList<Workshop>();
         for (int l = 0; l < workshops.size(); l++) {
             if (workshops.get(l).isPrint()) {
-                if (inUse(workshops.get(l).getWorkshop_name(), learners))
+                if (inUse(workshops.get(l).getWorkshop_id(), learners))
                     return 1;
                 delWorkshops.add(workshops.get(l));
             }
@@ -449,7 +450,7 @@ public class Globals {
                 logger.debug("Read line: " + line);
                 String[] tokens = line.split(",");
                 // workshop, instructor, user_id, name, email, date
-                Learner learner = new Learner(workshopID, workshop, tokens[0].split("-")[0], tokens[1], tokens[2], tokens[3], "",
+                Learner learner = new Learner(workshopID, tokens[0].split("-")[0], tokens[1], tokens[2], tokens[3], "",
                         "", tokens[4], tokens[5], new Lessons());
                 learners.add(learner);
             }
@@ -481,7 +482,7 @@ public class Globals {
                 String line = sc.nextLine().strip();
                 String[] tokens = line.split(",");
                 date = (date.strip().equals("") ? now() : date);
-                Learner learner = new Learner(workshopID, workshop, badge, instructor, (tokens[0] + "_" + tokens[1]).replace(" ", "_"), tokens[0], "",
+                Learner learner = new Learner(workshopID, badge, instructor, (tokens[0] + "_" + tokens[1]).replace(" ", "_"), tokens[0], "",
                         tokens[1], tokens[2], date, new Lessons());
                 learners.add(learner);
             }

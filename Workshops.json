@@ -1,0 +1,42 @@
+[
+  {
+    "workshop_id": "YYYY-MM-DD-swc",
+    "workshop_name": "Software Carpentries",
+    "badge": "swc",
+    "date_from": "",
+    "date_to": "",
+    "URL": ""
+  },
+  {
+    "workshop_id": "YYYY-MM-DD-dc",
+    "workshop_name": "Data Carpentries",
+    "badge": "dc",
+    "date_from": "",
+    "date_to": "",
+    "URL": ""
+  },
+  {
+    "workshop_id": "YYYY-MM-DD-lc",
+    "workshop_name": "Library Carpentries",
+    "badge": "lc",
+    "date_from": "",
+    "date_to": "",
+    "URL": ""
+  },
+  {
+    "workshop_id": "2022-11-31-NCL",
+    "workshop_name": "Software Carpentries",
+    "badge": "swc",
+    "date_from": "2022-11-31",
+    "date_to": "2022-12-01",
+    "URL": ""
+  },
+  {
+    "workshop_id": "2022-11-22-NCL",
+    "workshop_name": "Software Carpentries",
+    "badge": "swc",
+    "date_from": "2022-11-22",
+    "date_to": "2022-11-25",
+    "URL": ""
+  }
+]

@@ -1,0 +1,46 @@
+[
+  {
+    "lessonID": "u1",
+    "description": "The Unix Shell"
+  },
+  {
+    "lessonID": "g1",
+    "description": "Version Control with Git"
+  },
+  {
+    "lessonID": "p1",
+    "description": "Programming with Python"
+  },
+  {
+    "lessonID": "p2",
+    "description": "Plotting and Programming in Python"
+  },
+  {
+    "lessonID": "r1",
+    "description": "Programming with R"
+  },
+  {
+    "lessonID": "r2",
+    "description": "R for Reproducible Scientific Analysis"
+  },
+  {
+    "lessonID": "o1",
+    "description": "Workshop Overview"
+  },
+  {
+    "lessonID": "re1",
+    "description": "Introduction to Working with Data (Regular Expressions)"
+  },
+  {
+    "lessonID": "u2",
+    "description": "The Unix Shell (Library Carpentries)"
+  },
+  {
+    "lessonID": "o2",
+    "description": "OpenRefine"
+  },
+  {
+    "lessonID": "g2",
+    "description": "Introduction got Git"
+  }
+]

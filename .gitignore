@@ -3,8 +3,9 @@
 .settings
 .factorypath
 target/
-*.json
+data/
 *.pdf
 *.csv
 *.txt
+.idea/
 system.properties

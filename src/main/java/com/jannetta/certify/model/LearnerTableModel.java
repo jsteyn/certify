@@ -22,26 +22,24 @@ public class LearnerTableModel extends AbstractTableModel {
             case 0:
                 return learner.getWorkshopID();
             case 1:
-                return learner.getWorkshopName();
-            case 2:
                 return learner.getBadge();
-            case 3:
+            case 2:
                 return learner.getInstructor();
-            case 4:
+            case 3:
                 return learner.getUser_id();
-            case 5:
+            case 4:
                 return learner.getFirstname();
-            case 6:
+            case 5:
                 return learner.getInitials();
-            case 7:
+            case 6:
                 return learner.getLastname();
-            case 8:
+            case 7:
                 return learner.getEmail();
-            case 9:
+            case 8:
                 return learner.getDate();
-            case 10:
+            case 9:
                 return learner.getLessonString();
-            case 11:
+            case 10:
                 return learner.isPrint();
         }
 
