@@ -12,7 +12,7 @@
    enable-background="new 0 0 792 612"
    xml:space="preserve"
    inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
-   sodipodi:docname="ncl-attendance.svg"
+   sodipodi:docname="pad-attendance.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -1840,7 +1840,7 @@
    id="namedview8046"
    showgrid="false"
    inkscape:zoom="1.4226207"
-   inkscape:cx="396.45142"
+   inkscape:cx="396.09996"
    inkscape:cy="304.36785"
    inkscape:window-x="3840"
    inkscape:window-y="0"
@@ -2190,45 +2190,45 @@
    y="0"><tspan
      x="407.0293"
      y="317.02347"
-     id="tspan259405"><tspan
+     id="tspan14164"><tspan
        style="text-align:center;text-anchor:middle"
-       id="tspan259403">
+       id="tspan14162">
 </tspan></tspan><tspan
      x="407.0293"
      y="340.35684"
-     id="tspan259409"><tspan
+     id="tspan14168"><tspan
        style="text-align:center;text-anchor:middle"
-       id="tspan259407">
+       id="tspan14166">
 </tspan></tspan><tspan
      x="407.0293"
      y="363.69022"
-     id="tspan259413"><tspan
+     id="tspan14172"><tspan
        style="text-align:center;text-anchor:middle"
-       id="tspan259411">
+       id="tspan14170">
 </tspan></tspan><tspan
      x="407.0293"
      y="387.02359"
-     id="tspan259417"><tspan
+     id="tspan14176"><tspan
        style="text-align:center;text-anchor:middle"
-       id="tspan259415">
+       id="tspan14174">
 </tspan></tspan><tspan
      x="407.0293"
      y="410.35696"
-     id="tspan259421"><tspan
+     id="tspan14180"><tspan
        style="text-align:center;text-anchor:middle"
-       id="tspan259419">
+       id="tspan14178">
 </tspan></tspan><tspan
      x="407.0293"
      y="433.69034"
-     id="tspan259425"><tspan
+     id="tspan14184"><tspan
        style="text-align:center;text-anchor:middle"
-       id="tspan259423">
+       id="tspan14182">
 </tspan></tspan><tspan
      x="407.0293"
      y="457.02371"
-     id="tspan259429"><tspan
+     id="tspan14188"><tspan
        style="text-align:center;text-anchor:middle"
-       id="tspan259427">
+       id="tspan14186">
 </tspan></tspan></text><g
    id="g3024" /><g
    id="g3048" /><g
@@ -4059,7 +4059,7 @@
    y="501.76303"
    id="text138915"><tspan
      sodipodi:role="line"
-     id="tspan138913"></tspan></text><text
+     id="tspan138913" /></text><text
    xml:space="preserve"
    style="font-size:16px;line-height:1.25;font-family:sans-serif;fill:#414042;fill-opacity:1"
    x="395.27344"

@@ -310,11 +310,9 @@ public class Globals {
             logger.debug("Saving " + filename);
             writer.close();
         } catch (JsonIOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.trace("File " + filename + " not found");
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.trace("IOError while trying to write to " + filename);
         }
     }
 
