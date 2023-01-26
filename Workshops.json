@@ -24,19 +24,11 @@
     "URL": ""
   },
   {
-    "workshop_id": "2022-11-31-NCL",
-    "workshop_name": "Software Carpentries",
-    "badge": "swc",
-    "date_from": "2022-11-31",
-    "date_to": "2022-12-01",
-    "URL": ""
-  },
-  {
-    "workshop_id": "2022-11-22-NCL",
-    "workshop_name": "Software Carpentries",
+    "workshop_id": "YYYY-MM-DD-pad",
+    "workshop_name": "Python Advanced",
     "badge": "pad",
-    "date_from": "2022-11-22",
-    "date_to": "2022-11-25",
+    "date_from": "",
+    "date_to": "",
     "URL": ""
   }
 ]

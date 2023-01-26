@@ -42,5 +42,9 @@
   {
     "lessonID": "g2",
     "description": "Introduction got Git"
+  },
+  {
+    "lessonID": "ap1",
+    "description": "Advanced Programming"
   }
 ]
