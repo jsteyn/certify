@@ -34,7 +34,7 @@
   {
     "workshop_id": "2022-11-22-NCL",
     "workshop_name": "Software Carpentries",
-    "badge": "swc",
+    "badge": "pad",
     "date_from": "2022-11-22",
     "date_to": "2022-11-25",
     "URL": ""
