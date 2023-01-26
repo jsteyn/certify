@@ -21,6 +21,15 @@ public class Workshops extends ArrayList<Workshop> {
     Hashtable<String, Integer> id_index = new Hashtable<>();
 
     /**
+     * Find workshop using its ID
+     * @param workshopID the ID of the workshop
+     * @return the workshop with the provided ID
+     */
+    public Workshop returnWorkshop(String workshopID) {
+        return workshops.get(id_index.get(workshopID));
+    }
+
+    /**
      * The number of attributes (columns) in the Workshop class.
      *
      * @return an integer containing the number attributes in the workshop class to be used as columns in a table
