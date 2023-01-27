@@ -160,7 +160,7 @@ public class LessonPanel extends JPanel implements ActionListener {
         }
         if (e.getActionCommand().equals("Save")) {
             logger.trace("Save file");
-            globals.saveJSON(globals.getProperty("lessonfile"), globals.getLessons());
+            globals.saveJSON("lessonfile", globals.getLessons());
             globals.setLessonsSaved(true);
         }
         if (e.getActionCommand().equals("Delete")) {

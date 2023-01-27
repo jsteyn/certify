@@ -78,7 +78,7 @@ public class MainFrame extends JFrame {
 					"Exit Certify?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if (result1 == JOptionPane.YES_OPTION) {
 				logger.trace("Save learner file");
-				globals.saveJSON(globals.getProperty("learnerfile"), globals.getAllLearners());
+				globals.saveJSON("learnerfile", globals.getAllLearners());
 				globals.setLearnersSaved(true);
 			} else if (result1 == JOptionPane.NO_OPTION) {
 				logger.trace("Quit without saving learners");
@@ -93,7 +93,7 @@ public class MainFrame extends JFrame {
 					"Exit Certify?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if (result2 == JOptionPane.YES_OPTION) {
 				logger.trace("Save workshop file");
-				globals.saveJSON(globals.getProperty("workshopfile"), globals.getWorkshops());
+				globals.saveJSON("workshopfile", globals.getWorkshops());
 				globals.setWorkshopsSaved(true);
 			} else if (result2 == JOptionPane.NO_OPTION) {
 				logger.trace("Quit without saving workshops");
@@ -107,7 +107,7 @@ public class MainFrame extends JFrame {
 					"Exit Certify?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if (result2 == JOptionPane.YES_OPTION) {
 				logger.trace("Save lessons file");
-				globals.saveJSON(globals.getProperty("lessonfile"), globals.getLessons());
+				globals.saveJSON("lessonfile", globals.getLessons());
 				globals.setLessonsSaved(true);
 			} else if (result2 == JOptionPane.NO_OPTION) {
 				logger.trace("Quit without saving lessons");

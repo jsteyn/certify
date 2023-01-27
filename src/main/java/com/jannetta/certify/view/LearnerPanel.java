@@ -295,17 +295,18 @@ public class LearnerPanel extends JPanel implements ActionListener {
         }
         if (e.getActionCommand().equals("Save")) {
             logger.trace("Save file");
-            globals.saveJSON("Learners.json", globals.getAllLearners());
+            globals.saveJSON("learnerfile", globals.getAllLearners());
             globals.setLearnersSaved(false);
         }
         if (e.getActionCommand().equals("Print")) {
             Learners learners = globals.getLearners();
 
             learners.getLearners().forEach((learner) -> {
+                String pdfDirectory = globals.getProperty("pdfdirectory");
                 if (learner.isPrint()) {
                     // replace fields in template svg
                     String badge = learner.getBadge();
-                    String svgTemplate = badge + "-attendance.svg";
+                    String svgTemplate = pdfDirectory.concat("/").concat(badge).concat("-attendance.svg");
                     try {
                         Scanner sc = new Scanner(new File(svgTemplate));
                         String content = sc.useDelimiter("\\Z").next();
@@ -315,13 +316,13 @@ public class LearnerPanel extends JPanel implements ActionListener {
                         content = content.replace("{{instructor}}", learner.getInstructor().strip());
                         content = content.replace("{{workshop}}", globals.getWorkshops().getWorkshopName(learner.getWorkshopID().strip()));
                         sc.close();
-                        String svgFile = learner.getUser_id() + ".svg";
+                        String svgFile = pdfDirectory.concat("/").concat(learner.getUser_id()).concat(".svg");
                         PrintWriter pw = new PrintWriter(svgFile);
                         pw.write(content);
                         pw.close();
 
                         // convert svg to pdf
-                        Globals.svg2pdf(svgFile, learner.getUser_id());
+                        Globals.svg2pdf(pdfDirectory, svgFile, learner.getUser_id());
                     } catch (FileNotFoundException e1) {
                         logger.error(e1.getMessage());
                     }

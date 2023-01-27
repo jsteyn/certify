@@ -58,7 +58,10 @@ public class Globals {
     private static final GsonBuilder gsonBuilder = new GsonBuilder();
     private static final Gson gson = gsonBuilder.setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
     private static Properties properties;
-    private static final String propertyfile = "system.properties";
+    private static final String propertyFile = "system.properties";
+    private static String configDirectory = "";
+    private static String dataDirectory = "";
+    private static String pdfDirectory = "";
     private static String workshopfile = "Workshops.json";
     private static String learnerfile = "Learners.json";
     private static String lessonfile = "Lessons.json";
@@ -73,8 +76,11 @@ public class Globals {
     public static Globals getInstance() {
         if (globals == null) {
             globals = new Globals();
+            pdfDirectory = System.getProperty("user.home").concat("/").concat(".certify");
+            configDirectory = System.getProperty("user.home").concat("/").concat(".certify");
+            dataDirectory = System.getProperty("user.home");
 
-            checkFile(propertyfile); // If the file doesn't exist create it
+            checkFile(configDirectory, propertyFile); // If the file doesn't exist create it
 
             properties = loadProperties();
 
@@ -111,9 +117,9 @@ public class Globals {
 
     private static Workshops loadWorkshops(Workshops ws) {
         try {
-            logger.trace("Loading " + globals.getProperty("workshopfile"));
-            checkFile(globals.getProperty("workshopfile")); // If the file doesn't exist create it
-            Reader reader = Files.newBufferedReader(Paths.get(globals.getProperty("workshopfile")));
+            logger.trace("Loading " + globals.getProperty("datadirectory").concat("/").concat(globals.getProperty("workshopfile")));
+            checkFile(globals.getProperty("datadirectory"), globals.getProperty("workshopfile")); // If the file doesn't exist create it
+            Reader reader = Files.newBufferedReader(Paths.get(globals.getProperty("datadirectory").concat("/").concat(globals.getProperty("workshopfile"))));
             ws = gson.fromJson(reader, Workshops.class);
             if (ws == null) {
                 ws = new Workshops();
@@ -127,9 +133,9 @@ public class Globals {
 
     private static Learners loadLearners(Learners lrns) {
         try {
-            logger.trace("Loading " + globals.getProperty("learnerfile"));
-            checkFile(globals.getProperty("learnerfile")); // If the file doesn't exist create it
-            Reader reader = Files.newBufferedReader(Paths.get(globals.getProperty("learnerfile")));
+            logger.trace("Loading " + globals.getProperty("datadirectory").concat("/").concat(globals.getProperty("learnerfile")));
+            checkFile(globals.getProperty("datadirectory"), globals.getProperty("learnerfile")); // If the file doesn't exist create it
+            Reader reader = Files.newBufferedReader(Paths.get(globals.getProperty("datadirectory").concat("/").concat(globals.getProperty("learnerfile"))));
             lrns = gson.fromJson(reader, Learners.class);
             if (lrns == null) {
                 lrns = new Learners();
@@ -143,9 +149,9 @@ public class Globals {
 
     private static Lessons loadLessons(Lessons lessons) {
         try {
-            logger.trace("Loading " + globals.getProperty("lessonfile"));
-            checkFile(globals.getProperty("lessonfile")); // If the file doesn't exist create it
-            Reader reader = Files.newBufferedReader(Paths.get(globals.getProperty("lessonfile")));
+            logger.trace("Loading " + globals.getProperty("datadirectory").concat("/").concat(globals.getProperty("lessonfile")));
+            checkFile(globals.getProperty("datadirectory"), globals.getProperty("lessonfile")); // If the file doesn't exist create it
+            Reader reader = Files.newBufferedReader(Paths.get(globals.getProperty("datadirectory").concat("/").concat(globals.getProperty("lessonfile"))));
             lessons = gson.fromJson(reader, Lessons.class);
             if (lessons == null) {
                 lessons = new Lessons();
@@ -157,11 +163,18 @@ public class Globals {
         return lessons;
     }
 
-    private static void checkFile(String filename) {
+    private static void checkFile(String dir, String filename) {
+        logger.debug("Check if directory " + dir + " exists.");
+        File directory = new File(dir);
+        if (!directory.equals(""))
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
         try {
-            logger.debug("Check if file " + filename + " exists.");
-            File f1 = new File(filename);
-            f1.createNewFile();
+            filename = dir.concat("/").concat(filename);
+            logger.debug("Check if file ".concat(filename));
+            File file = new File(filename);
+            file.createNewFile();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -172,28 +185,31 @@ public class Globals {
      * Load properties from system.properties file
      */
     public static Properties loadProperties() {
-        logger.trace("Load properties from " + propertyfile);
+        String propertiesfile = System.getProperty("user.home").concat("/.certify/").concat(propertyFile);
+        logger.trace("Load properties from " + propertiesfile);
         properties = new Properties();
         try {
-            File f = new File(propertyfile);
+            File f = new File(propertiesfile);
             // If the file doesn't exist, create it
 
             if (!(f.exists())) {
                 OutputStream out = new FileOutputStream(f);
-                logger.trace("Create system.properties file");
+                logger.trace("Create ".concat(f.getAbsolutePath()));
                 out.close();
             }
             InputStream is = new FileInputStream(f);
             properties.load(is);
-            // If there are no properties yet, set STORAGE to the default value of /upload
             if (properties.size() == 0) {
                 logger.trace("Add basic properties");
                 properties.setProperty("learnerfile", learnerfile);
+                properties.setProperty("datadirectory", dataDirectory);
+                properties.setProperty("pdfdirectory", pdfDirectory);
+                properties.setProperty("configdirectory", configDirectory);
                 properties.setProperty("workshopfile", workshopfile);
                 properties.setProperty("lessonfile", lessonfile);
                 properties.setProperty("badges", sBadges);
             }
-            FileOutputStream out = new FileOutputStream(propertyfile);
+            FileOutputStream out = new FileOutputStream(propertiesfile);
             properties.store(out, "");
             is.close();
             out.close();
@@ -303,7 +319,8 @@ public class Globals {
         Globals.workshopComboBoxModel = workshopComboBoxModel;
     }
 
-    public void saveJSON(String filename, Object object) {
+    public void saveJSON(String filenameProperty, Object object) {
+        String filename = getProperty("datadirectory").concat("/").concat(getProperty(filenameProperty));
         try {
             Writer writer = new FileWriter(filename);
             gson.toJson(object, writer);
@@ -358,17 +375,17 @@ public class Globals {
         logger.trace("Update lesson table model");
     }
 
-    public static void svg2pdf(String certificate, String userID) {
+    public static void svg2pdf(String pdfPath, String certificate, String userID) {
         File outputFile;
         File f_svgFile = new File(certificate);
         try {
-            outputFile = File.createTempFile("result-", ".pdf");
+            outputFile = File.createTempFile(pdfPath.concat("/").concat("result-"), ".pdf");
             SVGConverter converter = new SVGConverter();
             converter.setDestinationType(DestinationType.PDF);
             converter.setSources(new String[]{f_svgFile.toString()});
             converter.setDst(outputFile);
             converter.execute();
-            Path copied = Paths.get(userID + ".pdf");
+            Path copied = Paths.get(pdfPath.concat("/").concat(userID).concat(".pdf"));
             Files.copy(outputFile.toPath(), copied);
             Files.delete(outputFile.toPath());
             Files.delete(f_svgFile.toPath());
