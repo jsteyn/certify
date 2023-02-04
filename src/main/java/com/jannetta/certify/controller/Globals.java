@@ -252,7 +252,7 @@ public class Globals {
      * @param property property to return
      * @return property
      */
-    public String getProperty(String property) {
+    public static String getProperty(String property) {
         if (properties == null) {
             loadProperties();
         }

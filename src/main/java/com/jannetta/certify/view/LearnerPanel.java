@@ -98,6 +98,7 @@ public class LearnerPanel extends JPanel implements ActionListener {
         btn_importCSV.setActionCommand("csv");
         btn_save.addActionListener(this);
         btn_print.addActionListener(this);
+        btn_mail.addActionListener(this);
         btn_delete.addActionListener(this);
 
         // Dropdown box with all workshops to select from
@@ -192,6 +193,7 @@ public class LearnerPanel extends JPanel implements ActionListener {
 
         buttonPanel2.add(btn_save);
         buttonPanel2.add(btn_print);
+        buttonPanel2.add(btn_mail);
 
         // Add components to main panel
         // Form components
@@ -300,7 +302,17 @@ public class LearnerPanel extends JPanel implements ActionListener {
             globals.setLearnersSaved(false);
         }
         if (e.getActionCommand().equals("Mail")) {
+            Learners learners = globals.getLearners();
 
+            learners.getLearners().forEach((learner) -> {
+                String pdfDirectory = globals.getProperty("directory.pdf");
+                if (learner.isPrint()) {
+                    String email = learner.getEmail().strip();
+                    if (!email.equals("") || !(email == null)) {
+
+                    }
+                }
+            });
         }
         if (e.getActionCommand().equals("Print")) {
             Learners learners = globals.getLearners();
