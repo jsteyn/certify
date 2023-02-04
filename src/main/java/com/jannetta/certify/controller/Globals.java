@@ -47,8 +47,10 @@ import com.jannetta.certify.model.Workshops;
  */
 public class Globals {
     private static final Logger logger = LoggerFactory.getLogger(Globals.class);
-    private String[] badges = {"swc", "dc", "lc", "pad"};
-    private static String sBadges = "swc,dc,lc,pad";
+
+    private static final String version = "1.0";
+    private String[] badges = {"", "swc", "dc", "lc", "pad"};
+    private static final String sBadges = ",swc,dc,lc,pad";
 
     private static Globals globals = null;
     private static Workshops workshops = new Workshops();
@@ -117,9 +119,9 @@ public class Globals {
 
     private static Workshops loadWorkshops(Workshops ws) {
         try {
-            logger.trace("Loading " + globals.getProperty("datadirectory").concat("/").concat(globals.getProperty("workshopfile")));
-            checkFile(globals.getProperty("datadirectory"), globals.getProperty("workshopfile")); // If the file doesn't exist create it
-            Reader reader = Files.newBufferedReader(Paths.get(globals.getProperty("datadirectory").concat("/").concat(globals.getProperty("workshopfile"))));
+            logger.trace("Loading " + globals.getProperty("directory.data").concat("/").concat(globals.getProperty("file.workshop")));
+            checkFile(globals.getProperty("directory.data"), globals.getProperty("file.workshop")); // If the file doesn't exist create it
+            Reader reader = Files.newBufferedReader(Paths.get(globals.getProperty("directory.data").concat("/").concat(globals.getProperty("file.workshop"))));
             ws = gson.fromJson(reader, Workshops.class);
             if (ws == null) {
                 ws = new Workshops();
@@ -133,9 +135,9 @@ public class Globals {
 
     private static Learners loadLearners(Learners lrns) {
         try {
-            logger.trace("Loading " + globals.getProperty("datadirectory").concat("/").concat(globals.getProperty("learnerfile")));
-            checkFile(globals.getProperty("datadirectory"), globals.getProperty("learnerfile")); // If the file doesn't exist create it
-            Reader reader = Files.newBufferedReader(Paths.get(globals.getProperty("datadirectory").concat("/").concat(globals.getProperty("learnerfile"))));
+            logger.trace("Loading " + globals.getProperty("directory.data").concat("/").concat(globals.getProperty("file.learner")));
+            checkFile(globals.getProperty("directory.data"), globals.getProperty("file.learner")); // If the file doesn't exist create it
+            Reader reader = Files.newBufferedReader(Paths.get(globals.getProperty("directory.data").concat("/").concat(globals.getProperty("file.learner"))));
             lrns = gson.fromJson(reader, Learners.class);
             if (lrns == null) {
                 lrns = new Learners();
@@ -149,9 +151,9 @@ public class Globals {
 
     private static Lessons loadLessons(Lessons lessons) {
         try {
-            logger.trace("Loading " + globals.getProperty("datadirectory").concat("/").concat(globals.getProperty("lessonfile")));
-            checkFile(globals.getProperty("datadirectory"), globals.getProperty("lessonfile")); // If the file doesn't exist create it
-            Reader reader = Files.newBufferedReader(Paths.get(globals.getProperty("datadirectory").concat("/").concat(globals.getProperty("lessonfile"))));
+            logger.trace("Loading " + globals.getProperty("directory.data").concat("/").concat(globals.getProperty("file.lesson")));
+            checkFile(globals.getProperty("directory.data"), globals.getProperty("file.lesson")); // If the file doesn't exist create it
+            Reader reader = Files.newBufferedReader(Paths.get(globals.getProperty("directory.data").concat("/").concat(globals.getProperty("file.lesson"))));
             lessons = gson.fromJson(reader, Lessons.class);
             if (lessons == null) {
                 lessons = new Lessons();
@@ -167,9 +169,9 @@ public class Globals {
         logger.debug("Check if directory " + dir + " exists.");
         File directory = new File(dir);
         if (!directory.equals(""))
-        if (!directory.exists()) {
-            directory.mkdirs();
-        }
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
         try {
             filename = dir.concat("/").concat(filename);
             logger.debug("Check if file ".concat(filename));
@@ -201,13 +203,20 @@ public class Globals {
             properties.load(is);
             if (properties.size() == 0) {
                 logger.trace("Add basic properties");
-                properties.setProperty("learnerfile", learnerfile);
-                properties.setProperty("datadirectory", dataDirectory);
-                properties.setProperty("pdfdirectory", pdfDirectory);
-                properties.setProperty("configdirectory", configDirectory);
-                properties.setProperty("workshopfile", workshopfile);
-                properties.setProperty("lessonfile", lessonfile);
+                properties.setProperty("file.learner", learnerfile);
+                properties.setProperty("file.workshop", workshopfile);
+                properties.setProperty("file.lesson", lessonfile);
+                properties.setProperty("directory.data", dataDirectory);
+                properties.setProperty("directory.pdf", pdfDirectory);
+                properties.setProperty("directory.config", configDirectory);
                 properties.setProperty("badges", sBadges);
+                properties.setProperty("mail.smtp.auth", "");
+                properties.setProperty("mail.smtp.host", "");
+                properties.setProperty("mail.smtp.port", "");
+                properties.setProperty("mail.smtp.starttls.enable", "");
+                properties.setProperty("mail.smtp.from", "");
+                properties.setProperty("mail.smtp.password", "");
+                properties.setProperty("mail.smtp.to", "");
             }
             FileOutputStream out = new FileOutputStream(propertiesfile);
             properties.store(out, "");
@@ -320,7 +329,7 @@ public class Globals {
     }
 
     public void saveJSON(String filenameProperty, Object object) {
-        String filename = getProperty("datadirectory").concat("/").concat(getProperty(filenameProperty));
+        String filename = getProperty("directory.data").concat("/").concat(getProperty(filenameProperty));
         try {
             Writer writer = new FileWriter(filename);
             gson.toJson(object, writer);
@@ -525,6 +534,14 @@ public class Globals {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
         return sdf.format(cal.getTime());
+    }
+
+    public static Properties getProperties() {
+        return  properties;
+    }
+
+    public static String getVersion() {
+        return version;
     }
 
 }

@@ -93,7 +93,8 @@ public class MenuBar extends JMenuBar implements ActionListener {
             JOptionPane.showMessageDialog(this,
                     "Certify is a program for taking the register during a Carpentries course\n"
                             + "and producing certificates of attendance afterwards.\n"
-                            + "Copyright: Jannetta S Steyn, 2020",
+                            + "Copyright: Jannetta S Steyn, 2020\n"
+                            + "Version: " + Globals.getVersion(),
                     "About Certify", JOptionPane.PLAIN_MESSAGE, icon);
         }
         if (e.getActionCommand().equals("Exit")) {

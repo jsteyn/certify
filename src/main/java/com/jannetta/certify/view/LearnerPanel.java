@@ -79,6 +79,7 @@ public class LearnerPanel extends JPanel implements ActionListener {
     private final JButton btn_importCSV = new JButton("Import CSV");
     private final JButton btn_save = new JButton("Save");
     private final JButton btn_print = new JButton("Print");
+    private final JButton btn_mail = new JButton("Mail");
     private final JButton btn_delete = new JButton("Delete");
     private int selected_row = -1;
     private final CheckBoxHeader checkboxHeader;
@@ -239,8 +240,8 @@ public class LearnerPanel extends JPanel implements ActionListener {
             resetTableHeader();
             globals.learnersSetView(view);
             String name = view.equals("All") ? "All" : globals.getWorkshops().getWorkshopName(view);
-            logger.debug("WORKSHOP NAME: " + view + " - " + name);
-            String badge = globals.getWorkshops().returnWorkshop((String) cb_workshopIDs.getSelectedItem()).getBadge();
+//            logger.debug("WORKSHOP NAME: " + view + " - " + name);
+            String badge = view.equals("All") ? "" : globals.getWorkshops().returnWorkshop((String) cb_workshopIDs.getSelectedItem()).getBadge();
             cb_badge.setSelectedItem(badge);
             tf_workshopName.setText(name);
         }
@@ -295,14 +296,17 @@ public class LearnerPanel extends JPanel implements ActionListener {
         }
         if (e.getActionCommand().equals("Save")) {
             logger.trace("Save file");
-            globals.saveJSON("learnerfile", globals.getAllLearners());
+            globals.saveJSON("file.learner", globals.getAllLearners());
             globals.setLearnersSaved(false);
+        }
+        if (e.getActionCommand().equals("Mail")) {
+
         }
         if (e.getActionCommand().equals("Print")) {
             Learners learners = globals.getLearners();
 
             learners.getLearners().forEach((learner) -> {
-                String pdfDirectory = globals.getProperty("pdfdirectory");
+                String pdfDirectory = globals.getProperty("directory.pdf");
                 if (learner.isPrint()) {
                     // replace fields in template svg
                     String badge = learner.getBadge();
