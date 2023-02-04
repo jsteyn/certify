@@ -270,18 +270,18 @@ public class Globals {
     }
 
     public Learner findLearner(String userID) {
-        for (int i = 0; i < all_learners.size(); i++) {
-            if (all_learners.get(i).getUser_id().equals(userID)) {
-                return all_learners.get(i);
+        for (Learner allLearner : all_learners) {
+            if (allLearner.getUser_id().equals(userID)) {
+                return allLearner;
             }
         }
         return null;
     }
 
     public Lesson findLesson(String lessonID) {
-        for (int i = 0; i < lessons.size(); i++) {
-            if (lessons.get(i).getLessonID().equals(lessonID)) {
-                return lessons.get(i);
+        for (Lesson lesson : lessons) {
+            if (lesson.getLessonID().equals(lessonID)) {
+                return lesson;
             }
         }
         return null;
@@ -389,17 +389,15 @@ public class Globals {
             Files.copy(outputFile.toPath(), copied);
             Files.delete(outputFile.toPath());
             Files.delete(f_svgFile.toPath());
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        } catch (SVGConverterException e) {
+        } catch (IOException | SVGConverterException e) {
             logger.error(e.getMessage());
         }
 
     }
 
     private boolean inUse(String workshop_id, Learners learners) {
-        for (int l = 0; l < learners.size(); l++) {
-            if (learners.get(l).getWorkshopID().equals(workshop_id))
+        for (Learner learner : learners) {
+            if (learner.getWorkshopID().equals(workshop_id))
                 return true;
         }
 
@@ -409,15 +407,15 @@ public class Globals {
     public int delWorkshops(Learners learners) {
         Workshops workshops = globals.getWorkshops();
         ArrayList<Workshop> delWorkshops = new ArrayList<Workshop>();
-        for (int l = 0; l < workshops.size(); l++) {
-            if (workshops.get(l).isPrint()) {
-                if (inUse(workshops.get(l).getWorkshop_id(), learners))
+        for (Workshop workshop : workshops) {
+            if (workshop.isPrint()) {
+                if (inUse(workshop.getWorkshop_id(), learners))
                     return 1;
-                delWorkshops.add(workshops.get(l));
+                delWorkshops.add(workshop);
             }
         }
-        for (int l = 0; l < delWorkshops.size(); l++) {
-            workshops.remove(delWorkshops.get(l));
+        for (Workshop delWorkshop : delWorkshops) {
+            workshops.remove(delWorkshop);
             globals.setWorkshopsSaved(false);
         }
         return 0;
@@ -425,13 +423,13 @@ public class Globals {
 
     public Learners delLearners(Learners learners) {
         ArrayList<Learner> delLearners = new ArrayList<Learner>();
-        for (int l = 0; l < learners.size(); l++) {
-            if (learners.get(l).isPrint()) {
-                delLearners.add(learners.get(l));
+        for (Learner learner : learners) {
+            if (learner.isPrint()) {
+                delLearners.add(learner);
             }
         }
-        for (int l = 0; l < delLearners.size(); l++) {
-            learners.remove(delLearners.get(l));
+        for (Learner delLearner : delLearners) {
+            learners.remove(delLearner);
             globals.setLearnersSaved(false);
         }
         return learners;
@@ -439,13 +437,13 @@ public class Globals {
 
     public static Lessons delLessons(Lessons lessons) {
         ArrayList<Lesson> delLessons = new ArrayList<Lesson>();
-        for (int i = 0; i < lessons.size(); i++) {
-            if (lessons.get(i).isPrint()) {
-                delLessons.add(lessons.get(i));
+        for (Lesson lesson : lessons) {
+            if (lesson.isPrint()) {
+                delLessons.add(lesson);
             }
         }
-        for (int i = 0; i < delLessons.size(); i++) {
-            lessons.remove(delLessons.get(i));
+        for (Lesson delLesson : delLessons) {
+            lessons.remove(delLesson);
             globals.setLessonsSaved(false);
         }
         return lessons;
