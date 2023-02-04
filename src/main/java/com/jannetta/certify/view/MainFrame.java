@@ -51,8 +51,6 @@ public class MainFrame extends JFrame {
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
 		try {
 			Image icon = toolkit.getImage(ClassLoader.getSystemResource("Certify.png"));
-			//URL resource = getClass().getClassLoader().getResource("Certify1.png");
-			//BufferedImage image = ImageIO.read(resource);
 			setIconImage(icon);
 		} catch (NullPointerException e) {
 			logger.error("Certify.png not found.");
@@ -78,7 +76,7 @@ public class MainFrame extends JFrame {
 					"Exit Certify?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if (result1 == JOptionPane.YES_OPTION) {
 				logger.trace("Save learner file");
-				globals.saveJSON("learnerfile", globals.getAllLearners());
+				globals.saveJSON("file.learner", globals.getAllLearners());
 				globals.setLearnersSaved(true);
 			} else if (result1 == JOptionPane.NO_OPTION) {
 				logger.trace("Quit without saving learners");
@@ -93,7 +91,7 @@ public class MainFrame extends JFrame {
 					"Exit Certify?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if (result2 == JOptionPane.YES_OPTION) {
 				logger.trace("Save workshop file");
-				globals.saveJSON("workshopfile", globals.getWorkshops());
+				globals.saveJSON("file.workshop", globals.getWorkshops());
 				globals.setWorkshopsSaved(true);
 			} else if (result2 == JOptionPane.NO_OPTION) {
 				logger.trace("Quit without saving workshops");
@@ -107,7 +105,7 @@ public class MainFrame extends JFrame {
 					"Exit Certify?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if (result2 == JOptionPane.YES_OPTION) {
 				logger.trace("Save lessons file");
-				globals.saveJSON("lessonfile", globals.getLessons());
+				globals.saveJSON("file.lesson", globals.getLessons());
 				globals.setLessonsSaved(true);
 			} else if (result2 == JOptionPane.NO_OPTION) {
 				logger.trace("Quit without saving lessons");

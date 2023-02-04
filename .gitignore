@@ -1,3 +1,6 @@
+libraries/
+out/
+src/main/resources/META-INF/
 .classpath
 .project
 .settings

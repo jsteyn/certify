@@ -11,6 +11,8 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -37,6 +39,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.miginfocom.swing.MigLayout;
+
+import static com.jannetta.certify.controller.EmailUtil.sendEmail;
 
 public class LearnerPanel extends JPanel implements ActionListener {
 
@@ -235,6 +239,7 @@ public class LearnerPanel extends JPanel implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
+        logger.trace("Action event: " + e.getActionCommand());
         if (e.getActionCommand().equals("comboBoxChanged")) {
             String view = (String) cb_workshopIDs.getSelectedItem();
             if (!(globals.getAllLearners() == null))
@@ -309,7 +314,27 @@ public class LearnerPanel extends JPanel implements ActionListener {
                 if (learner.isPrint()) {
                     String email = learner.getEmail().strip();
                     if (!email.equals("") || !(email == null)) {
+                        // Sender's email ID needs to be mentioned
+                        String from = globals.getProperty("mail.smtp.from");
 
+                        final String username = globals.getProperty("mail.smtp.from");//change accordingly
+                        final String password = globals.getProperty("mail.smtp.password");//change accordingly
+                        String bodyText = "Dear ".concat(learner.getFirstname()).concat("\n\n").
+                                concat("Congratulations on completing the workshop. Please find attached " +
+                                        "your certificate of attendance.\n\n" +
+                                        "Yours sincerely\n" +
+                                        "Newcastle University RSE Team");
+
+                        // Get the Session object.
+                        Session session = Session.getInstance(Globals.getProperties(),
+                                new javax.mail.Authenticator() {
+                                    protected PasswordAuthentication getPasswordAuthentication() {
+                                        return new PasswordAuthentication(username, password);
+                                    }
+                                });
+                        session.setDebug(true);
+                        sendEmail(session, learner.getEmail().strip(), "Certificate of Attendance", bodyText, from,
+                                from, learner.getUser_id());
                     }
                 }
             });
@@ -319,10 +344,11 @@ public class LearnerPanel extends JPanel implements ActionListener {
 
             learners.getLearners().forEach((learner) -> {
                 String pdfDirectory = globals.getProperty("directory.pdf");
+                String templateDirectory = globals.getProperty("directory.config");
                 if (learner.isPrint()) {
                     // replace fields in template svg
                     String badge = learner.getBadge();
-                    String svgTemplate = pdfDirectory.concat("/").concat(badge).concat("-attendance.svg");
+                    String svgTemplate = templateDirectory.concat("/").concat(badge).concat("-attendance.svg");
                     try {
                         Scanner sc = new Scanner(new File(svgTemplate));
                         String content = sc.useDelimiter("\\Z").next();

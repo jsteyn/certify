@@ -21,7 +21,7 @@ public class EmailUtil {
      * @param body
      */
     public static int sendEmail(Session session, String toEmail, String subject, String body, String fromEmail,
-                                 String replyToEmail){
+                                 String replyToEmail, String user_id){
         try
         {
             MimeMessage msg = new MimeMessage(session);
@@ -30,7 +30,7 @@ public class EmailUtil {
             msg.addHeader("format", "flowed");
             msg.addHeader("Content-Transfer-Encoding", "8bit");
 
-            msg.setFrom(new InternetAddress(fromEmail, "NoReply-JD"));
+            msg.setFrom(new InternetAddress(fromEmail));
             msg.setReplyTo(InternetAddress.parse(replyToEmail, false));
             msg.setSubject(subject, "UTF-8");
             msg.setText(body, "UTF-8");
@@ -38,11 +38,11 @@ public class EmailUtil {
             msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail, false));
 
             BodyPart messageBodyPart = new MimeBodyPart();
-            messageBodyPart.setText("This is message body");
+            messageBodyPart.setText(body);
             Multipart multipart = new MimeMultipart();
             multipart.addBodyPart(messageBodyPart);
             messageBodyPart = new MimeBodyPart();
-            String filename = Globals.getProperty("directory.pdf") + "/Ben_Dixon.pdf";
+            String filename = Globals.getProperty("directory.pdf").concat("/").concat(user_id) + ".pdf";
             DataSource source = new FileDataSource(filename);
             messageBodyPart.setDataHandler(new DataHandler(source));
             messageBodyPart.setFileName(filename);

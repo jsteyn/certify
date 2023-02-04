@@ -103,7 +103,7 @@ public class Globals {
     public void learnersSetView(String view) {
         logger.trace("View: " + view);
         learners = new Learners();
-        if (view.equals("All")) {
+        if (view.equals("All") || view == null) {
             learners = all_learners;
         } else {
             if (!(all_learners.getLearners() == null))
@@ -393,7 +393,9 @@ public class Globals {
             converter.setDestinationType(DestinationType.PDF);
             converter.setSources(new String[]{f_svgFile.toString()});
             converter.setDst(outputFile);
+            logger.trace("Converting to pdf - outputFile " + outputFile);
             converter.execute();
+            logger.trace("Converting to pdf");
             Path copied = Paths.get(pdfPath.concat("/").concat(userID).concat(".pdf"));
             Files.copy(outputFile.toPath(), copied);
             Files.delete(outputFile.toPath());

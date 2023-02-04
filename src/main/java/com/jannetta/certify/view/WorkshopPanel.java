@@ -196,7 +196,7 @@ public class WorkshopPanel extends JPanel implements ActionListener {
 		}
 		if (e.getActionCommand().equals("Save")) {
 			logger.trace("Save file");
-			globals.saveJSON("workshopfile", globals.getWorkshops());
+			globals.saveJSON("file.workshop", globals.getWorkshops());
 			globals.setWorkshopsSaved(true);
 		}
 		if (e.getActionCommand().equals("Delete")) {
