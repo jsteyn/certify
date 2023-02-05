@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
+import javax.mail.Authenticator;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.swing.AbstractButton;
@@ -306,40 +307,8 @@ public class LearnerPanel extends JPanel implements ActionListener {
             globals.saveJSON("file.learner", globals.getAllLearners());
             globals.setLearnersSaved(false);
         }
-        if (e.getActionCommand().equals("Mail")) {
-            Learners learners = globals.getLearners();
 
-            learners.getLearners().forEach((learner) -> {
-                String pdfDirectory = globals.getProperty("directory.pdf");
-                if (learner.isPrint()) {
-                    String email = learner.getEmail().strip();
-                    if (!email.equals("") || !(email == null)) {
-                        // Sender's email ID needs to be mentioned
-                        String from = globals.getProperty("mail.smtp.from");
-
-                        final String username = globals.getProperty("mail.smtp.from");//change accordingly
-                        final String password = globals.getProperty("mail.smtp.password");//change accordingly
-                        String bodyText = "Dear ".concat(learner.getFirstname()).concat("\n\n").
-                                concat("Congratulations on completing the workshop. Please find attached " +
-                                        "your certificate of attendance.\n\n" +
-                                        "Yours sincerely\n" +
-                                        "Newcastle University RSE Team");
-
-                        // Get the Session object.
-                        Session session = Session.getInstance(Globals.getProperties(),
-                                new javax.mail.Authenticator() {
-                                    protected PasswordAuthentication getPasswordAuthentication() {
-                                        return new PasswordAuthentication(username, password);
-                                    }
-                                });
-                        session.setDebug(true);
-                        sendEmail(session, learner.getEmail().strip(), "Certificate of Attendance", bodyText, from,
-                                from, learner.getUser_id());
-                    }
-                }
-            });
-        }
-        if (e.getActionCommand().equals("Print")) {
+        if (e.getActionCommand().equals("Print") || e.getActionCommand().equals("Mail")) {
             Learners learners = globals.getLearners();
 
             learners.getLearners().forEach((learner) -> {
@@ -371,6 +340,41 @@ public class LearnerPanel extends JPanel implements ActionListener {
 
                 }
 
+            });
+        }
+        if (e.getActionCommand().equals("Mail")) {
+            Learners learners = globals.getLearners();
+
+            learners.getLearners().forEach((learner) -> {
+                String pdfDirectory = globals.getProperty("directory.pdf");
+                if (learner.isPrint()) {
+                    String email = learner.getEmail().strip();
+                    logger.debug("Send certificate by email to " + email);
+                    if (!email.equals("") || !(email == null)) {
+                        // Sender's email ID needs to be mentioned
+                        String from = globals.getProperty("mail.from");
+
+                        final String username = globals.getProperty("mail.from");//change accordingly
+                        final String password = globals.getProperty("mail.password");//change accordingly
+                        String bodyText = "Dear ".concat(learner.getFirstname()).concat("\n\n").
+                                concat("Congratulations on completing the workshop. Please find attached " +
+                                        "your certificate of attendance.\n\n" +
+                                        "Yours sincerely\n" +
+                                        "Newcastle University RSE Team");
+
+                        // Get the Session object.
+                        Authenticator auth = new Authenticator() {
+                            //override the getPasswordAuthentication method
+                            protected PasswordAuthentication getPasswordAuthentication() {
+                                return new PasswordAuthentication(username, password);
+                            }
+                        };
+                        Session session = Session.getInstance(Globals.getProperties(), auth);
+                        session.setDebug(true);
+                        sendEmail(session, learner.getEmail().strip(), "Certificate of Attendance", bodyText, from,
+                                from, learner.getUser_id());
+                    }
+                }
             });
         }
         if (e.getActionCommand().equals("Delete")) {

@@ -15,6 +15,7 @@ public class MainTabbedPane extends JTabbedPane{
 		addTab("Workshops", new WorkshopPanel());
 		addTab("Learners", new LearnerPanel());
 		addTab("Lessons", new LessonPanel());
+		addTab("Configuration", new ConfigurationPanel());
 	}
 
 }
