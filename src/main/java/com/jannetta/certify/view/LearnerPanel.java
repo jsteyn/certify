@@ -1,48 +1,34 @@
 package com.jannetta.certify.view;
 
-import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.util.Scanner;
+import com.jannetta.certify.controller.FileTypeFilter;
+import com.jannetta.certify.controller.Globals;
+import com.jannetta.certify.model.*;
+import net.miginfocom.swing.MigLayout;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.mail.Authenticator;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
-import javax.swing.AbstractButton;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.TableColumn;
-
-import com.jannetta.certify.controller.FileTypeFilter;
-import com.jannetta.certify.controller.Globals;
-import com.jannetta.certify.model.Learner;
-import com.jannetta.certify.model.LearnerTableModel;
-import com.jannetta.certify.model.Learners;
-import com.jannetta.certify.model.Lessons;
-import com.jannetta.certify.model.WorkshopComboBoxModel;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import net.miginfocom.swing.MigLayout;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+import java.util.Scanner;
 
 import static com.jannetta.certify.controller.EmailUtil.sendEmail;
 
+/**
+ * Panel displaying learners in table format
+ */
 public class LearnerPanel extends JPanel implements ActionListener {
 
     /**
@@ -53,15 +39,6 @@ public class LearnerPanel extends JPanel implements ActionListener {
     Globals globals = Globals.getInstance();
 
     private final JLabel lbl_workshopName = new JLabel("*Workshop Name");
-    private final JLabel lbl_workshopID = new JLabel("*Workshop ID");
-    private final JLabel lbl_badge = new JLabel("*Badge");
-    private final JLabel lbl_instructor = new JLabel("*Instructor");
-    private final JLabel lbl_user_id = new JLabel("User ID");
-    private final JLabel lbl_firstname = new JLabel("Firstname");
-    private final JLabel lbl_initials = new JLabel("Initials");
-    private final JLabel lbl_lastname = new JLabel("Lastname");
-    private final JLabel lbl_email = new JLabel("Email Address");
-    private final JLabel lbl_date = new JLabel("Date");
     private final JTextField tf_workshopName = new JTextField(50);
 
     private final JComboBox<String> cb_workshopIDs;
@@ -75,8 +52,6 @@ public class LearnerPanel extends JPanel implements ActionListener {
     private final JTextField tf_date = new JTextField(15);
     private final LessonSelectionPanel pnl_LessonSelection;
     private final JTable tbl_learners;
-    private final JPanel buttonPanel1 = new JPanel();
-    private final JPanel buttonPanel2 = new JPanel();
     private final JButton btn_submit = new JButton("Submit");
     private final JButton btn_update = new JButton("Update");
     private final JButton btn_cancel = new JButton("Cancel");
@@ -89,6 +64,9 @@ public class LearnerPanel extends JPanel implements ActionListener {
     private int selected_row = -1;
     private final CheckBoxHeader checkboxHeader;
 
+    /**
+     * Default constructor
+     */
     public LearnerPanel() {
         super();
         logger.trace("Create learner panel");
@@ -189,6 +167,7 @@ public class LearnerPanel extends JPanel implements ActionListener {
         setLayout(migLayout);
 
         // Add buttons to panels
+        JPanel buttonPanel1 = new JPanel();
         buttonPanel1.add(btn_submit);
         buttonPanel1.add(btn_update);
         buttonPanel1.add(btn_cancel);
@@ -196,6 +175,7 @@ public class LearnerPanel extends JPanel implements ActionListener {
         buttonPanel1.add(btn_importCSV);
         buttonPanel1.add(btn_delete);
 
+        JPanel buttonPanel2 = new JPanel();
         buttonPanel2.add(btn_save);
         buttonPanel2.add(btn_print);
         buttonPanel2.add(btn_mail);
@@ -204,23 +184,32 @@ public class LearnerPanel extends JPanel implements ActionListener {
         // Form components
 
 
+        JLabel lbl_workshopID = new JLabel("*Workshop ID");
         add(lbl_workshopID);
         add(cb_workshopIDs);
         add(pnl_LessonSelection, "span 1 9, wrap");
+        JLabel lbl_badge = new JLabel("*Badge");
         add(lbl_badge);
         add(cb_badge, "wrap");
+        JLabel lbl_instructor = new JLabel("*Instructor");
         add(lbl_instructor);
         add(tf_instructor, "wrap");
+        JLabel lbl_user_id = new JLabel("User ID");
         add(lbl_user_id);
         add(tf_user_id, "wrap");
+        JLabel lbl_firstname = new JLabel("Firstname");
         add(lbl_firstname);
         add(tf_firstname, "wrap");
+        JLabel lbl_initials = new JLabel("Initials");
         add(lbl_initials);
         add(tf_initials, "wrap");
+        JLabel lbl_lastname = new JLabel("Lastname");
         add(lbl_lastname);
         add(tf_lastname, "wrap");
+        JLabel lbl_email = new JLabel("Email Address");
         add(lbl_email);
         add(tf_email, "wrap");
+        JLabel lbl_date = new JLabel("Date");
         add(lbl_date);
         add(tf_date, "wrap");
 
@@ -352,16 +341,25 @@ public class LearnerPanel extends JPanel implements ActionListener {
                     logger.debug("Send certificate by email to " + email);
                     if (!email.equals("") || !(email == null)) {
                         // Sender's email ID needs to be mentioned
-                        String from = globals.getProperty("mail.from");
+                        String from = Globals.getProperty("mail.from");
 
-                        final String username = globals.getProperty("mail.from");//change accordingly
-                        final String password = globals.getProperty("mail.password");//change accordingly
+                        final String username = Globals.getProperty("mail.from");//change accordingly
+                        final String password = Globals.getProperty("mail.password");//change accordingly
+                        /**
                         String bodyText = "Dear ".concat(learner.getFirstname()).concat("\n\n").
                                 concat("Congratulations on completing the workshop. Please find attached " +
                                         "your certificate of attendance.\n\n" +
                                         "Yours sincerely\n" +
                                         "Newcastle University RSE Team");
-
+                        **/
+                        LocalDateTime ldt = LocalDateTime.now();
+                        String formattedDateStr = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH)
+                                .format(ldt);
+                        String workshopname = Globals.getWorkshopName(learner.getWorkshopID());
+                        String bodyText = "{\"name\":\"".concat(learner.getFirstname()).
+                                concat("\",\"email\":\"").concat(learner.getEmail()).
+                                concat("\",\"date\":\"").concat(formattedDateStr).
+                                concat("\",\"workshoptitle\":\"").concat(workshopname).concat("\"}");
                         // Get the Session object.
                         Authenticator auth = new Authenticator() {
                             //override the getPasswordAuthentication method
@@ -371,7 +369,7 @@ public class LearnerPanel extends JPanel implements ActionListener {
                         };
                         Session session = Session.getInstance(Globals.getProperties(), auth);
                         session.setDebug(true);
-                        sendEmail(session, learner.getEmail().strip(), "Certificate of Attendance", bodyText, from,
+                        sendEmail(session, Globals.getProperty("mail.forward"), "Resend Certificate", bodyText, from,
                                 from, learner.getUser_id());
                     }
                 }
@@ -461,6 +459,4 @@ public class LearnerPanel extends JPanel implements ActionListener {
         globals.getWorkshopComboBoxModel().setWorkshopIDs((globals.getWorkshops().getWorkshopIDs()));
 
     }
-
-
 }

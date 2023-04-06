@@ -49,8 +49,8 @@ public class Globals {
     private static final Logger logger = LoggerFactory.getLogger(Globals.class);
 
     private static final String version = "1.0";
-    private String[] badges = {"", "swc", "dc", "lc", "pad"};
-    private static final String sBadges = ",swc,dc,lc,pad";
+    private String[] badges = {"", "swc", "dc", "lc", "pad", "iot"};
+    private static final String sBadges = ",swc,dc,lc,pad,iot";
 
     private static Globals globals = null;
     private static Workshops workshops = new Workshops();
@@ -131,6 +131,11 @@ public class Globals {
             e.printStackTrace();
         }
         return ws;
+    }
+
+    public static String getWorkshopName(String workshopID) {
+        return workshops.getWorkshopName(workshopID);
+
     }
 
     private static Learners loadLearners(Learners lrns) {

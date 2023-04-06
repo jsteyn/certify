@@ -39,10 +39,9 @@ public class MainFrame extends JFrame {
 		super("Certify");
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (ClassNotFoundException e) {
-		} catch (InstantiationException e) {
-		} catch (IllegalAccessException e) {
-		} catch (UnsupportedLookAndFeelException e) {
+		} catch (ClassNotFoundException | UnsupportedLookAndFeelException | InstantiationException |
+				 IllegalAccessException e) {
+			logger.error(e.getMessage());
 		}
 
 		// TODO FIX THIS
