@@ -80,7 +80,7 @@ public class Globals {
             globals = new Globals();
             pdfDirectory = System.getProperty("user.home").concat("/").concat(".certify");
             configDirectory = System.getProperty("user.home").concat("/").concat(".certify");
-            dataDirectory = System.getProperty("user.home");
+            dataDirectory = System.getProperty("user.home").concat("/").concat(".certify");
 
             checkFile(configDirectory, propertyFile); // If the file doesn't exist create it
 
