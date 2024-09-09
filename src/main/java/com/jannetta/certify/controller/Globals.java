@@ -1,15 +1,6 @@
 package com.jannetta.certify.controller;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Reader;
-import java.io.Writer;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -19,10 +10,17 @@ import java.util.Calendar;
 import java.util.Properties;
 import java.util.Scanner;
 
-import org.apache.batik.apps.rasterizer.DestinationType;
-import org.apache.batik.apps.rasterizer.SVGConverter;
-import org.apache.batik.apps.rasterizer.SVGConverterException;
 
+import com.itextpdf.kernel.geom.PageSize;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import org.apache.batik.anim.dom.SAXSVGDocumentFactory;
+import org.apache.batik.transcoder.TranscoderException;
+import org.apache.batik.transcoder.TranscoderInput;
+import org.apache.batik.transcoder.TranscoderOutput;
+import org.apache.batik.transcoder.image.PNGTranscoder;
+import org.apache.batik.util.XMLResourceDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,6 +37,8 @@ import com.jannetta.certify.model.Lessons;
 import com.jannetta.certify.model.WorkshopComboBoxModel;
 import com.jannetta.certify.model.WorkshopTableModel;
 import com.jannetta.certify.model.Workshops;
+import org.w3c.dom.svg.SVGDocument;
+import org.w3c.dom.svg.SVGSVGElement;
 
 /**
  * A singleton that can be accessed from anywhere
@@ -390,23 +390,58 @@ public class Globals {
     }
 
     public static void svg2pdf(String pdfPath, String certificate, String userID) {
-        File outputFile;
-        File f_svgFile = new File(certificate);
+
         try {
-            outputFile = File.createTempFile(pdfPath.concat("/").concat("result-"), ".pdf");
-            SVGConverter converter = new SVGConverter();
-            converter.setDestinationType(DestinationType.PDF);
-            converter.setSources(new String[]{f_svgFile.toString()});
-            converter.setDst(outputFile);
-            logger.trace("Converting to pdf - outputFile " + outputFile);
-            converter.execute();
-            logger.trace("Converting to pdf");
+            // Step 1: Load and parse the SVG file to get dimensions
+            String svgFilePath = certificateatus
+                    ; // Change to your SVG file path
+            String parser = XMLResourceDescriptor.getXMLParserClassName();
+            SAXSVGDocumentFactory factory = new SAXSVGDocumentFactory(parser);
+            InputStream svgInputStream = new FileInputStream(new File(svgFilePath));
+            SVGDocument svgDocument = factory.createSVGDocument(svgFilePath, svgInputStream);
+            SVGSVGElement rootElement = svgDocument.getRootElement();
+            float svgWidth = Float.parseFloat(rootElement.getAttribute("width").replaceAll("px", ""));
+            float svgHeight = Float.parseFloat(rootElement.getAttribute("height").replaceAll("px", ""));
+
+            // Step 1: Convert SVG to PNG
+            ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
+            TranscoderInput inputSvgImage = new TranscoderInput("File:" + certificate);
+            TranscoderOutput outputPngImage = new TranscoderOutput(pngOutputStream);
+            PNGTranscoder transcoder = new PNGTranscoder();
+            transcoder.transcode(inputSvgImage, outputPngImage);
+
+            byte[] pngData = pngOutputStream.toByteArray();
+
+            // Step 2: Write PNG to PDF
+            String pdfOutputPath = certificate.replace(".svg", ".pdf"); // Change to your desired PDF output path
+            PdfWriter writer = new PdfWriter(pdfOutputPath);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            pdfDoc.setDefaultPageSize(PageSize.A4);
+            PageSize pageSize = new PageSize(svgWidth, svgHeight);
+            pdfDoc.setDefaultPageSize(pageSize);
+            Document document = new Document(pdfDoc);
+
+            // Convert PNG byte array to Image and add to PDF
+            com.itextpdf.layout.element.Image image = new com.itextpdf.layout.element.Image(
+                    com.itextpdf.io.image.ImageDataFactory.create(pngData)
+            );
+
+            // Add image to PDF document
+            document.add(image);
+            document.close();
+            logger.trace("Converting to pdf - outputFile " + pdfOutputPath);
             Path copied = Paths.get(pdfPath.concat("/").concat(userID).concat(".pdf"));
-            Files.copy(outputFile.toPath(), copied);
-            Files.delete(outputFile.toPath());
-            Files.delete(f_svgFile.toPath());
-        } catch (IOException | SVGConverterException e) {
-            logger.error(e.getMessage());
+            File pdfFile     = new File(pdfOutputPath);
+            File svgfile = new File(certificate);
+            Files.copy(pdfFile.toPath(), copied);
+            logger.debug("pdf: " + pdfOutputPath);
+            logger.debug("svg: " + svgfile);
+//            Files.delete(outputfile.toPath());
+            Files.delete(svgfile.toPath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (TranscoderException e) {
+            throw new RuntimeException(e);
         }
 
     }
