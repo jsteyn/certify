@@ -40,6 +40,8 @@ import com.jannetta.certify.model.Workshops;
 import org.w3c.dom.svg.SVGDocument;
 import org.w3c.dom.svg.SVGSVGElement;
 
+import static com.itextpdf.kernel.pdf.PdfName.Document;
+
 /**
  * A singleton that can be accessed from anywhere
  *
@@ -393,7 +395,7 @@ public class Globals {
 
         try {
             // Step 1: Load and parse the SVG file to get dimensions
-            String svgFilePath = "/Users/njss3/.certify/swc-attendance.svg";
+            String svgFilePath = "swc-attendance.svg";
                     ; // Change to your SVG file path
             String parser = XMLResourceDescriptor.getXMLParserClassName();
             SAXSVGDocumentFactory factory = new SAXSVGDocumentFactory(parser);
